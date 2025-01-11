@@ -10,7 +10,7 @@ const App = () => {
   return (
     <div>
      
-      <Header name = {course}/>
+      <Header course = {course}/>
       <Content part1 = {part1}  exercises1 = {exercises1}
         part2 = {part2}  exercises2 = {exercises2}
         part3 = {part3}  exercises3 = {exercises3} />
@@ -22,7 +22,7 @@ const App = () => {
 const Header = (props) => {
   return (
     <div>
-     <h1>{props.name}</h1>
+     <h1>{props.course}</h1>
     </div>
   )
 }
