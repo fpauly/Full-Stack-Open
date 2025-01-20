@@ -13,48 +13,27 @@ const anecdotes = [
 ]
 
 const Anecdotes=(props)=>{
-  
-  
-  if(props.name=='anecdote'){
-    //console.log('test')
-    return(
-      <div>
-      
-        {anecdotes[props.selected]}
-      </div>
-    )
-  }
-  else if(props.name=='most') {
-    //console.log(props)
-    return(
-      <div>
-      <div>
-        {anecdotes[props.index]}
-      </div>
-      <div>
-        has {props.max} votes
-      </div>
-      </div>
-    )
-  }
-  
+
+  return(
+    <div>
+    
+      {anecdotes[props.selected]}
+    </div>
+  )
 }
 
 const VoteResult=(props)=>{
-  
- 
-    return(
-      <div>
-      <div>
-        {anecdotes[props.index]}
-      </div>
-      <div>
-        has {props.max} votes
-      </div>
-      </div>
-    )
-  
-  
+
+  return(
+    <div>
+    <div>
+      {anecdotes[props.index]}
+    </div>
+    <div>
+      has {props.max} votes
+    </div>
+    </div>
+  )
 }
 const ButtonNext=(props)=>{
   return(
@@ -113,7 +92,7 @@ const App = () => {
       <ButtonVote name='vote' text='vote' onClick = {()=>voteAnecdote()}/>
       <ButtonNext name='random' text='next anecdote' onClick = {()=>randomSelect()}/>
       <h2>Anecdote with most votes</h2>
-      <Anecdotes name='most' max = {votes[mostVoteIndex]} index={mostVoteIndex}/>
+      <VoteResult name='most' max = {votes[mostVoteIndex]} index={mostVoteIndex}/>
     </div>
   )
 }
