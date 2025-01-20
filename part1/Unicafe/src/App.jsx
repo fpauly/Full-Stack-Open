@@ -47,7 +47,7 @@ const MyPersentage = (props)=>{
 }
 
 const StatisticLine=(props)=>{
-  switch(props.text){
+  switch(props.name){
     case 'good':
       return MyStatistic(props);
     case 'neutral':
@@ -74,12 +74,12 @@ const Statistics=(props)=>{
       <div>
       <table>
       <tbody>
-      <StatisticLine text='good' value={good} />
-      <StatisticLine text='neutral' value={neutral} />
-      <StatisticLine text='bad' value={bad} />
-      <StatisticLine text='all' value={good + neutral + bad} />
-      <StatisticLine text="Average" value={[good,neutral,bad]}/>
-      <StatisticLine text="positive" value={[good,neutral,bad]}/>
+      <StatisticLine name='good' text='good' value={good} />
+      <StatisticLine name='neutral' text='neutral' value={neutral} />
+      <StatisticLine name='bad' text='bad' value={bad} />
+      <StatisticLine name='all' text='all' value={good + neutral + bad} />
+      <StatisticLine name='average' text="average" value={[good,neutral,bad]}/>
+      <StatisticLine name='positive' text="positive" value={[good,neutral,bad]}/>
       </tbody>
       </table>
       </div>
