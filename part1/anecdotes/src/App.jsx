@@ -23,17 +23,23 @@ const Anecdotes=(props)=>{
 }
 
 const VoteResult=(props)=>{
-
-  return(
-    <div>
-    <div>
-      {anecdotes[props.index]}
-    </div>
-    <div>
-      has {props.max} votes
-    </div>
-    </div>
-  )
+  if(props.max>0){
+    return(
+      <div>
+      <div>
+        {anecdotes[props.index]}
+      </div>
+      <div>
+        has {props.max} votes
+      </div>
+      </div>
+    )
+  }
+  else {
+    return(<div>There are no votes yet. Please vote for your favorite.</div>)
+    
+  }
+  
 }
 const ButtonNext=(props)=>{
   return(
@@ -81,8 +87,6 @@ const App = () => {
  
   }
 
- 
-  
 
   return (
     <div>
