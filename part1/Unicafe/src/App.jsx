@@ -9,9 +9,7 @@ const MyButton = (props) => {
 }
 const MyStatistic = (props) => {
   return (
-    <div>
-      <p>{props.text} {props.value}</p>
-    </div>
+      <tr><td>{props.text} </td><td>{props.value}</td></tr>
   )
 }
 const MyAverage = (props)=>{
@@ -25,13 +23,8 @@ const MyAverage = (props)=>{
     value = score/all;
     
   }
-
-  
-
   return (
-    <div>
-      <p>{props.text} {value}</p>
-    </div>
+      <tr><td>{props.text} </td><td>{value}</td></tr>
   )
 }
 
@@ -40,7 +33,6 @@ const MyPersentage = (props)=>{
   const score = props.value[0]
   const all = props.value[0]+props.value[1]+props.value[2]
   let value = 0.0
-  
  
   if (all!==0){
   
@@ -49,14 +41,54 @@ const MyPersentage = (props)=>{
     value = value*100;
    
   }
-
-  
-
   return (
-    <div>
-      <p>{props.text} {value} %</p>
-    </div>
+      <tr><td>{props.text} </td><td>{value} %</td></tr>
   )
+}
+
+const StatisticLine=(props)=>{
+  switch(props.text){
+    case 'good':
+      return MyStatistic(props);
+    case 'neutral':
+      return MyStatistic(props);
+    case 'bad':
+      return MyStatistic(props);
+    case 'all':
+      return MyStatistic(props);
+    case 'Average':
+      return MyAverage(props);
+    case 'positive':
+      return MyPersentage(props);
+    
+  }
+}
+
+const Statistics=(props)=>{
+  const good = props.good;
+  const neutral = props.neutral;
+  const bad = props.bad;
+  const all = good + neutral + bad
+  if(all>0){
+    return( 
+      <div>
+      <table>
+      <tbody>
+      <StatisticLine text='good' value={good} />
+      <StatisticLine text='neutral' value={neutral} />
+      <StatisticLine text='bad' value={bad} />
+      <StatisticLine text='all' value={good + neutral + bad} />
+      <StatisticLine text="Average" value={[good,neutral,bad]}/>
+      <StatisticLine text="positive" value={[good,neutral,bad]}/>
+      </tbody>
+      </table>
+      </div>
+    )
+  }
+  else  {
+   
+    return <div><p>No feedback given</p></div>
+  }
 }
 const App = () => {
   // save clicks of each button to its own state
@@ -69,17 +101,12 @@ const App = () => {
   return (
     <div>
       <h1>give feedback</h1>
+      
       <MyButton onClick={() => setGood(good + 1)} text='good' />
       <MyButton onClick={() => setNeutral(neutral + 1)} text='neutral' />
       <MyButton onClick={() => setBad(bad + 1)} text='bad' />
-
-      <MyStatistic text='good' value={good} />
-      <MyStatistic text='neutral' value={neutral} />
-      <MyStatistic text='bad' value={bad} />
-      <MyStatistic text='all' value={good + neutral + bad} />
-      
-      <MyAverage text="Average" value={[good,neutral,bad]}/>
-      <MyPersentage text="positive" value={[good,neutral,bad]}/>
+      <h2>Statistics</h2>
+      <Statistics good = {good} neutral = {neutral} bad = {bad} />
     </div>
   )
 }
