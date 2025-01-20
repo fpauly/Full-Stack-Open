@@ -56,7 +56,7 @@ const StatisticLine=(props)=>{
       return MyStatistic(props);
     case 'all':
       return MyStatistic(props);
-    case 'Average':
+    case 'average':
       return MyAverage(props);
     case 'positive':
       return MyPersentage(props);
@@ -101,11 +101,10 @@ const App = () => {
   return (
     <div>
       <h1>give feedback</h1>
-      
       <MyButton onClick={() => setGood(good + 1)} text='good' />
       <MyButton onClick={() => setNeutral(neutral + 1)} text='neutral' />
       <MyButton onClick={() => setBad(bad + 1)} text='bad' />
-      <h2>Statistics</h2>
+      <h2>statistics</h2>
       <Statistics good = {good} neutral = {neutral} bad = {bad} />
     </div>
   )
