@@ -1,29 +1,39 @@
-const Header = (props)=> <h1>{props.course.name}</h1>
+const Header = ({name}) => <h1>{name}</h1>;
 
-const Content = ({parts})=>(
-    parts.map(p=>{
-        return(
-            <p key={p.id}>
-                {p.name} {p.exercises}
-            </p>
-        )
-    })
-)
-
-const Total = ({parts}) => {
+const Content = ({ parts }) =>
+  parts.map((p) => {
     return (
-        <p>Number of exercises {parts.reduce((sum,p)=>sum+p.exercises,0)}</p>
-    )
+      <p key={p.id}>
+        {p.name} {p.exercises}
+      </p>
+    );
+  });
+
+const Total = ({ parts }) => {
+  return (
+    <p>Number of exercises {parts.reduce((sum, p) => sum + p.exercises, 0)}</p>
+  );
+};
+
+const OneCourse = ({ name,parts }) => {
+  return (
+    <>
+      <Header name={name} />
+      <Content parts={parts} />
+      <Total parts={parts} />
+    </>
+  );
+};
+
+const Courses = ({courses}) =>{
+  return(
+    <>
+    {courses.map(p=>(
+      <OneCourse key={p.id} name={p.name} parts={p.parts}/>
+    ))}
+    </>
+  )
+
 }
 
-const Course = ({course}) => {
-    return(
-        <>
-        <Header course = {course} />
-        <Content parts={ course.parts} />
-        <Total parts={course.parts}/>
-        </>
-    )
-}
-
-export default Course
+export default Courses;
