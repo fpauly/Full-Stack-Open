@@ -7,7 +7,11 @@ const App = () => {
   const addPhoneNote = (event) => {
     event.preventDefault();
     if (!newName.trim()) return;
-
+    if(persons.some(p=>p.name===newName))
+    {
+      alert(`${newName} is already added to phonebook`)
+      return
+    }
     const newNote = {
       id: String(persons.length + 1),
       name: newName,
