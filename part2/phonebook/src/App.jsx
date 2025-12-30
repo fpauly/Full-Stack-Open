@@ -4,8 +4,10 @@ const App = () => {
   const [persons, setPersons] = useState([{ id: "1", name: "Arto Hellas" }]);
   const [newName, setNewName] = useState("");
 
-  const addPhoneNote = () => {
+  const addPhoneNote = (event) => {
     event.preventDefault();
+    if (!newName.trim()) return;
+
     const newNote = {
       id: String(persons.length + 1),
       name: newName,
