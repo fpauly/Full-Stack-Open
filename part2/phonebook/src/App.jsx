@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Filter from "./Filter";
 import PersonForm from "./PersonForm";
 import Persons from "./Persons";
-import personService from './PersonDB'
+import personService from "./PersonDB";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
@@ -20,19 +20,34 @@ const App = () => {
   const addPhoneNote = (event) => {
     event.preventDefault();
     if (!newName.trim()) return;
-    if (persons.some((p) => p.name === newName.trim())) {
-      alert(`${newName.trim()} is already added to phonebook`);
-      return;
-    }
+
     const newNote = {
       name: newName.trim(),
-      number: newNumber.trim(), 
+      number: newNumber.trim(),
     };
 
+    const existingP = persons.find((p) => p.name === newName.trim());
+
+    // if (persons.some((p) => p.name === newName.trim())) {
+    if (existingP) {
+      if (
+        window.confirm(
+          `${newName.trim()} is already added to phonebook, replace the old number with a new one?`
+        )
+      ) {
+        personService.update(existingP.id, newNote).then((response_p) => {
+          setPersons(currentState=>currentState.map(p=>(p.id===existingP.id?response_p.data:p)));
+          setNewName("");
+          setNewNumber("");
+        });
+        return;
+      }
+    }
+
     personService.addNew(newNote).then((response_p) => {
-      setPersons(persons.concat(response_p.data));
-      setNewName('');
-      setNewNumber('');
+      setPersons(currentState=>currentState.concat(response_p.data));
+      setNewName("");
+      setNewNumber("");
     });
   };
 
@@ -47,6 +62,14 @@ const App = () => {
     if (filterName.trim() === "") return true;
     return p.name.toLowerCase().includes(filterName.trim().toLowerCase());
   });
+
+  const onDeleteClick = (id) => {
+    // console.log(id)
+    if (window.confirm("This will delete the number. Continue?"))
+      personService.delRecord(id).then((r) => {
+        setPersons(currentState=>currentState.filter((p) => p.id !== id));
+      });
+  };
 
   return (
     <div>
@@ -69,7 +92,7 @@ const App = () => {
       />
 
       <h2>Numbers</h2>
-      <Persons personsToShow={personsToShow} />
+      <Persons personsToShow={personsToShow} onDelete={onDeleteClick} />
     </div>
   );
 };
