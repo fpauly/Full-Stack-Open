@@ -2,20 +2,19 @@ import { useEffect, useState } from "react";
 import Filter from "./Filter";
 import PersonForm from "./PersonForm";
 import Persons from "./Persons";
-import axios from 'axios'
+import axios from "axios";
 const App = () => {
-  const [persons, setPersons] = useState([
-  ]);
+  const [persons, setPersons] = useState([]);
 
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [filterName, setFilterName] = useState("");
 
-  useEffect(()=>{
-    axios.get('http://localhost:3001/persons').then(r=>{
-      setPersons(r.data)
-    })
-  },[])
+  useEffect(() => {
+    axios.get("http://localhost:3001/persons").then((r) => {
+      setPersons(r.data);
+    });
+  }, []);
 
   const addPhoneNote = (event) => {
     event.preventDefault();
@@ -25,14 +24,15 @@ const App = () => {
       return;
     }
     const newNote = {
-      id: String(persons.length + 1),
       name: newName.trim(),
       number: newNumber.trim(),
     };
 
-    setPersons(persons.concat(newNote));
-    setNewName("");
-    setNewNumber("");
+    axios.post("http://localhost:3001/persons", newNote).then((response_p) => {
+      setPersons(persons.concat(response_p.data));
+      setNewName('');
+      setNewNumber('');
+    });
   };
 
   const handleNewNameChange = (event) => setNewName(event.target.value);
@@ -68,7 +68,7 @@ const App = () => {
       />
 
       <h2>Numbers</h2>
-      <Persons personsToShow={personsToShow}/>
+      <Persons personsToShow={personsToShow} />
     </div>
   );
 };
