@@ -3,6 +3,7 @@ import Filter from "./Filter";
 import PersonForm from "./PersonForm";
 import Persons from "./Persons";
 import personService from "./PersonDB";
+import Notification from "./Nodification";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
@@ -10,6 +11,9 @@ const App = () => {
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [filterName, setFilterName] = useState("");
+
+  const [errorMessage, setErrorMessage] = useState(null);
+  const [classid, setClassid] = useState("message");
 
   useEffect(() => {
     personService.getAll().then((r) => {
@@ -36,18 +40,34 @@ const App = () => {
         )
       ) {
         personService.update(existingP.id, newNote).then((response_p) => {
-          setPersons(currentState=>currentState.map(p=>(p.id===existingP.id?response_p.data:p)));
+          setPersons((currentState) =>
+            currentState.map((p) =>
+              p.id === existingP.id ? response_p.data : p
+            )
+          );
           setNewName("");
           setNewNumber("");
+          setErrorMessage(`Updated ${newNote.name}`);
+          setClassid("message");
+          setTimeout(() => {
+            setErrorMessage(null);
+          }, 3000);
         });
+
+        
         return;
       }
     }
 
     personService.addNew(newNote).then((response_p) => {
-      setPersons(currentState=>currentState.concat(response_p.data));
+      setPersons((currentState) => currentState.concat(response_p.data));
       setNewName("");
       setNewNumber("");
+      setErrorMessage(`Added ${newNote.name}`);
+          setClassid("message");
+          setTimeout(() => {
+            setErrorMessage(null);
+          }, 3000);
     });
   };
 
@@ -63,17 +83,29 @@ const App = () => {
     return p.name.toLowerCase().includes(filterName.trim().toLowerCase());
   });
 
-  const onDeleteClick = (id) => {
+  const onDeleteClick = (person) => {
     // console.log(id)
     if (window.confirm("This will delete the number. Continue?"))
-      personService.delRecord(id).then((r) => {
-        setPersons(currentState=>currentState.filter((p) => p.id !== id));
-      });
+      personService
+        .delRecord(person.id)
+        .then((r) => {
+          setPersons((currentState) => currentState.filter((p) => p.id !== person.id));
+        })
+        .catch((error) => {
+          setErrorMessage(
+            `Information of ${person.name} has already been removed from server`
+          );
+          setClassid("error");
+          setTimeout(() => {
+            setErrorMessage(null);
+          }, 3000);
+        });
   };
 
   return (
     <div>
-      <h2>Phonebook</h2>
+      <h1>Phonebook</h1>
+      <Notification message={errorMessage} classid={classid} />
       <div>
         <Filter
           id="filterName"
