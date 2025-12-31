@@ -1,20 +1,21 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Filter from "./Filter";
 import PersonForm from "./PersonForm";
 import Persons from "./Persons";
-
+import axios from 'axios'
 const App = () => {
   const [persons, setPersons] = useState([
-    { id: "1", name: "Arto Hellas", number: "39-44-5323523" },
-    { id: "2", name: "Ada Lovelace", number: "40-12-9876543" },
-    { id: "3", name: "Linus Torvalds", number: "41-55-1234567" },
-    { id: "4", name: "Grace Hopper", number: "42-88-7654321" },
-    { id: "5", name: "Alan Turing", number: "43-01-1112223" },
   ]);
 
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [filterName, setFilterName] = useState("");
+
+  useEffect(()=>{
+    axios.get('http://localhost:3001/persons').then(r=>{
+      setPersons(r.data)
+    })
+  },[])
 
   const addPhoneNote = (event) => {
     event.preventDefault();
@@ -25,8 +26,8 @@ const App = () => {
     }
     const newNote = {
       id: String(persons.length + 1),
-      name: newName,
-      number: newNumber,
+      name: newName.trim(),
+      number: newNumber.trim(),
     };
 
     setPersons(persons.concat(newNote));
@@ -43,7 +44,7 @@ const App = () => {
 
   const personsToShow = persons.filter((p) => {
     if (filterName.trim() === "") return true;
-    return p.name.toLowerCase().includes(filterName.toLowerCase());
+    return p.name.toLowerCase().includes(filterName.trim().toLowerCase());
   });
 
   return (
