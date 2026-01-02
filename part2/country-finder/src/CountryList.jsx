@@ -1,4 +1,5 @@
-const CountryList = ({ countryList }) => {
+
+const CountryList = ({ countryList, onClick }) => {
   if (countryList.length === 1) {
     const data = countryList[0];
     return (
@@ -12,7 +13,7 @@ const CountryList = ({ countryList }) => {
             <li key={code}>{lang}</li>
           ))}
         </ul>
-        <img src={data.flags.png} alt={`Flag of ${data.name.common}`}/>
+        <img src={data.flags.png} alt={`Flag of ${data.name.common}`} />
       </>
     );
   }
@@ -20,7 +21,9 @@ const CountryList = ({ countryList }) => {
     <>
       <ul>
         {countryList.map((p) => (
-          <li key={p.cca3}>{p.name.common}</li>
+          <li key={p.cca3}>
+            {p.name.common} <button onClick={() => onClick(p)}>Show</button>
+          </li>
         ))}
       </ul>
     </>
