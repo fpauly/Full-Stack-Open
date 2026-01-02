@@ -1,35 +1,51 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useState } from "react";
+import countryService from "./countryDB";
+import Message from "./Message";
+import CountryList from "./CountryList";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [countryName, setCountryName] = useState("");
+  const [countryList, setCountryList] = useState([]);
+  const [message, setMessage] = useState(null)
 
+  const findCountry = (event) => {
+    const value = event.target.value
+    
+    setCountryName(value);
+    if(value.trim()==='')
+    {
+      setMessage(null)
+      setCountryList([])
+      return
+    }
+    countryService.getAll().then((response) => {
+      const filteredData = response.filter(p=>p.name.common.toLowerCase().includes(value.toLowerCase())) 
+      if(filteredData.length>10) {
+        setMessage('Too many matches, specify another filter')
+        setCountryList([])
+        return
+      }
+      
+        setMessage(null)
+        setCountryList(filteredData)
+
+    });
+  };
   return (
     <>
+      <h1>Country Finder</h1>
+      <Message message={message} />
       <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+        <label htmlFor="input_country">Find Countries</label>
+        <input
+          id="input_country"
+          value={countryName}
+          onChange={findCountry}
+        ></input>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <CountryList countryList={countryList}/>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
