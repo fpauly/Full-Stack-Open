@@ -1,6 +1,10 @@
 const express = require("express");
 const app = express();
 
+
+app.use(express.json())
+
+
 let persons = [
   {
     id: "1",
@@ -24,6 +28,14 @@ let persons = [
   },
 ];
 
+const generateId = () => {
+  let id = 0;
+  do {
+    id = Math.floor(Math.random() * 100000000);
+  } while (persons.find((p) => p.id === id.toString()));
+  return id.toString();
+};
+
 app.get("/", (request, response) => {
   response.send("<h1>Hello World!</h1>");
 });
@@ -44,7 +56,7 @@ app.get("/api/persons/:id", (request, response) => {
 
 app.delete("/api/persons/:id", (request, response) => {
   const id = request.params.id;
-  persons = persons.filter(p => p.id !== id);
+  persons = persons.filter((p) => p.id !== id);
   response.status(204).end();
 });
 
@@ -53,7 +65,19 @@ app.get("/info", (request, response) => {
   response.send(`<p>Phonebook has info for ${persons.length} people</p>
     <p>${date}</p>`);
 });
-
+app.post("/api/persons",(request,response)=>{
+  // const id = generateId();
+  const person = {
+    id:generateId(),
+    name:request.body.name,
+    number:request.body.number,
+  }
+  // const person = request.body;
+  // console.log(request.body.name)
+  // person.id = id;
+  persons = persons.concat(person);
+  response.json(person);
+})
 const PORT = 3008;
 app.listen(PORT);
 console.log(`Server running on port ${PORT}`);
