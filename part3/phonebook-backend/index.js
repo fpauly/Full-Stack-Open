@@ -75,10 +75,8 @@ app.delete(baseUrl + "/:id", (request, response) => {
   })
   .catch((error) => {
       response.status(400).json({ error: "malformatted id" });
+      next(error);
     });
-  
-
- 
 
   
 });
