@@ -78,6 +78,7 @@ const App = () => {
     setFilterName(event.target.value);
   };
 
+  console.log(persons);
   const personsToShow = persons.filter((p) => {
     if (filterName.trim() === "") return true;
     return p.name.toLowerCase().includes(filterName.trim().toLowerCase());
