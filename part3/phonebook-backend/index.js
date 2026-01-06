@@ -50,10 +50,6 @@ app.get(baseUrl + "/:id", (request, response, next) => {
 app.put(baseUrl + "/:id", (request, response, next) => {
   const body = request.body;
 
-  if (!body.name) {
-    return response.status(400).json({ error: "name missing" });
-  }
-
   Person.findOne({ name: body.name }).then((exsitP) => {
     if (!exsitP) {
       return response.status(404).json({ error: "person not found" });
