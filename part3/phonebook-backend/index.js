@@ -52,12 +52,12 @@ app.put(baseUrl + "/:id", (request, response, next) => {
 
   Person.findByIdAndUpdate(
     request.params.id,
-    { name: body.name, name: body.number },
-    { new: true, runValidators: true }
+    { name: body.name, number: body.number },
+    { new: true, runValidators: true , context: "query" }
   )
     .then((updated) => {
-      if (!updated) return res.status(404).json({ error: "person not found" });
-      res.json(updated);
+      if (!updated) return response.status(404).json({ error: "person not found" });
+      response.json(updated);
     })
     .catch(next);
 });
@@ -65,12 +65,6 @@ app.put(baseUrl + "/:id", (request, response, next) => {
 app.post(baseUrl, (request, response, next) => {
   const body = request.body;
 
-  Person.findOne({ name: body.name }).then((exsitP) => {
-    if (exsitP) {
-      exsitP.number = body.number;
-      return exsitP.save();
-    }
-  });
   const person = new Person({
     name: body.name,
     number: body.number,

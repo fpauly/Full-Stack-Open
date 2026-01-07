@@ -23,7 +23,20 @@ const App = () => {
 
   const addPhoneNote = (event) => {
     event.preventDefault();
-    if (!newName.trim()) return;
+    
+    if (!newName.trim()) {
+      setErrorMessage("Name cannot be empty");
+      setClassid("error");
+      setTimeout(() => setErrorMessage(null), 3000);
+      return;
+    }
+
+    if (!newNumber.trim()) {
+      setErrorMessage("Number cannot be empty");
+      setClassid("error");
+      setTimeout(() => setErrorMessage(null), 3000);
+      return;
+    }
 
     const newNote = {
       name: newName.trim(),
@@ -39,18 +52,27 @@ const App = () => {
           `${newName.trim()} is already added to phonebook, replace the old number with a new one?`
         )
       ) {
-        personService.update(existingP.id, newNote).then((response_p) => {
-          setPersons((currentState) =>
-            currentState.map((p) => (p.id === existingP.id ? response_p : p))
-          );
-          setNewName("");
-          setNewNumber("");
-          setErrorMessage(`Updated ${newNote.name}`);
-          setClassid("message");
-          setTimeout(() => {
-            setErrorMessage(null);
-          }, 3000);
-        });
+        personService
+          .update(existingP.id, newNote)
+          .then((response_p) => {
+            setPersons((currentState) =>
+              currentState.map((p) => (p.id === existingP.id ? response_p : p))
+            );
+            setNewName("");
+            setNewNumber("");
+            setErrorMessage(`Updated ${newNote.name}`);
+            setClassid("message");
+            setTimeout(() => {
+              setErrorMessage(null);
+            }, 3000);
+          })
+          .catch((error) => {
+            setErrorMessage(
+              error.response?.data?.error || "Something went wrong"
+            );
+            setClassid("error");
+            setTimeout(() => setErrorMessage(null), 3000);
+          });
 
         return;
       }
