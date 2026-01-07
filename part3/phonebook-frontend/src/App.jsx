@@ -115,12 +115,12 @@ const App = () => {
     if (window.confirm("This will delete the number. Continue?"))
       personService
         .delRecord(person.id)
-        .then((r) => {
+        .then(() => {
           setPersons((currentState) =>
             currentState.filter((p) => p.id !== person.id)
           );
         })
-        .catch((error) => {
+        .catch(() => {
           setErrorMessage(
             `Information of ${person.name} has already been removed from server`
           );
