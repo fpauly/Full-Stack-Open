@@ -50,26 +50,20 @@ app.get(baseUrl + "/:id", (request, response, next) => {
 app.put(baseUrl + "/:id", (request, response, next) => {
   const body = request.body;
 
-  Person.findOne({ name: body.name }).then((exsitP) => {
-    if (!exsitP) {
-      return response.status(404).json({ error: "person not found" });
-    }
-    exsitP.number = body.number;
-    exsitP
-      .save()
-      .then((savedP) => {
-        response.json(savedP);
-      })
-      .catch((error) => next(error));
-  });
+  Person.findByIdAndUpdate(
+    request.params.id,
+    { name: body.name, name: body.number },
+    { new: true, runValidators: true }
+  )
+    .then((updated) => {
+      if (!updated) return res.status(404).json({ error: "person not found" });
+      res.json(updated);
+    })
+    .catch(next);
 });
 
 app.post(baseUrl, (request, response, next) => {
   const body = request.body;
-
-  if (!body.name) {
-    return response.status(400).json({ error: "name missing" });
-  }
 
   Person.findOne({ name: body.name }).then((exsitP) => {
     if (exsitP) {

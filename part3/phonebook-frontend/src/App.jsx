@@ -3,7 +3,7 @@ import Filter from "./Filter";
 import PersonForm from "./PersonForm";
 import Persons from "./Persons";
 import personService from "./PersonDB";
-import Notification from "./Nodification";
+import Notification from "./Notification";
 
 const App = () => {
   const [persons, setPersons] = useState([]);
@@ -17,7 +17,7 @@ const App = () => {
 
   useEffect(() => {
     personService.getAll().then((r) => {
-      setPersons(r.data);
+      setPersons(r);
     });
   }, []);
 
@@ -41,9 +41,7 @@ const App = () => {
       ) {
         personService.update(existingP.id, newNote).then((response_p) => {
           setPersons((currentState) =>
-            currentState.map((p) =>
-              p.id === existingP.id ? response_p.data : p
-            )
+            currentState.map((p) => (p.id === existingP.id ? response_p : p))
           );
           setNewName("");
           setNewNumber("");
@@ -54,21 +52,27 @@ const App = () => {
           }, 3000);
         });
 
-        
         return;
       }
     }
 
-    personService.addNew(newNote).then((response_p) => {
-      setPersons((currentState) => currentState.concat(response_p.data));
-      setNewName("");
-      setNewNumber("");
-      setErrorMessage(`Added ${newNote.name}`);
-          setClassid("message");
-          setTimeout(() => {
-            setErrorMessage(null);
-          }, 3000);
-    });
+    personService
+      .addNew(newNote)
+      .then((response_p) => {
+        setPersons((currentState) => currentState.concat(response_p));
+        setNewName("");
+        setNewNumber("");
+        setErrorMessage(`Added ${newNote.name}`);
+        setClassid("message");
+        setTimeout(() => {
+          setErrorMessage(null);
+        }, 3000);
+      })
+      .catch((error) => {
+        setErrorMessage(error.response?.data?.error || "Something went wrong");
+        setClassid("error");
+        setTimeout(() => setErrorMessage(null), 3000);
+      });
   };
 
   const handleNewNameChange = (event) => setNewName(event.target.value);
@@ -90,7 +94,9 @@ const App = () => {
       personService
         .delRecord(person.id)
         .then((r) => {
-          setPersons((currentState) => currentState.filter((p) => p.id !== person.id));
+          setPersons((currentState) =>
+            currentState.filter((p) => p.id !== person.id)
+          );
         })
         .catch((error) => {
           setErrorMessage(
