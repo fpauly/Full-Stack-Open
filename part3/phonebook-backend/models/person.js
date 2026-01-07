@@ -15,8 +15,15 @@ mongoose
   });
 
 const personSchema = new mongoose.Schema({
-  name: String,
-  number: String,
+  name: {
+    type: String,
+    minlength: [3, "name has to be at least three characters"],
+    required: [true, "name could not be empty"],
+  },
+  number: {
+    type: String,
+    required: [true, "number could not be empty"],
+  },
 });
 
 personSchema.set("toJSON", {
