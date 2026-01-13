@@ -21,6 +21,10 @@ mongoose.connect(mongoUrl,{family:4})
 
 app.use(express.json())
 
+app.get('/',(request,response)=>{
+  response.send('<h1 align = center>Hello Full Stack Open</h1>')
+})
+
 app.get('/api/blogs',(request,response)=>{
   Blog.find({}).then(blogs=>{
     response.json(blogs)
@@ -36,6 +40,10 @@ app.post('/api/blogs',(request,response)=>{
 })
 
 const PORT = process.env.PORT
+
+//add this for favicon error
+// app.get('/favicon.ico', (req, res) => res.status(204).end())
+
 
 app.listen(PORT,()=>{
   console.log(`Server is running on port ${PORT}`)
