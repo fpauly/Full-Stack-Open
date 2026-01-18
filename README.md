@@ -1,3 +1,7 @@
+## This project is part of the  
+**Full Stack Open** course by the University of Helsinki.
+
+
 # Phonebook Backend (Full Stack Open – Part 3)
 
 This repository contains the **backend** for the Phonebook application built as part of  
@@ -11,5 +15,3 @@ https://full-stack-backend-j157.onrender.com/
 
 
 
-## This project is part of the  
-**Full Stack Open** course by the University of Helsinki.
