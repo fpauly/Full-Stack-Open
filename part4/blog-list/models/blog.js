@@ -11,7 +11,7 @@ blogSchema.set('toJSON', {
   transform: (document, returnObj) => {
     returnObj.id = returnObj._id.toString()
     delete returnObj._id
-    delete returnObj._v
+    delete returnObj.__v
   },
 })
 

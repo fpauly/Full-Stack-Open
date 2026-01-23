@@ -7,3 +7,7 @@ Content-Type: application/json
   "url": "http/test.com/101",
   "likes": 12
 }
+
+###
+get http://localhost:3018/api/blogs
+
