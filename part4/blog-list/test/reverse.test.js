@@ -3,6 +3,8 @@ const assert = require('node:assert')
 
 const reverse = require('../utils/for_testing').reverse
 
+// import { average } from '../utils/for_testing'
+
 test('reverse of a', () => {
   const result = reverse('a')
 
