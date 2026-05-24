@@ -40,6 +40,14 @@ test('blogs are returned as json', async () => {
     .expect('Content-Type', /application\/json/)
 })
 
+test('blogs have id instead of _id', async ()=>{
+    let blogs = await helper.blogsInDb() 
+    blogs.forEach(obj => {
+        assert.ok(obj.id!==undefined,'id should be defined')
+        assert.ok(obj._id===undefined,'_id should not be defined')
+    });
+})
+
 test('all blogs are returned', async()=>{
     const response = await api.get('/api/blogs')
     assert.strictEqual(response.body.length, helper.initialBlogs.length)
