@@ -40,6 +40,14 @@ test('blogs are returned as json', async () => {
     .expect('Content-Type', /application\/json/)
 })
 
+
+// test part 4.8
+test('all blogs are returned', async()=>{
+    const response = await api.get('/api/blogs')
+    assert.strictEqual(response.body.length, helper.initialBlogs.length)
+})
+
+// test part 4.9
 test('blogs have id instead of _id', async ()=>{
     let blogs = await helper.blogsInDb() 
     blogs.forEach(obj => {
@@ -48,10 +56,7 @@ test('blogs have id instead of _id', async ()=>{
     });
 })
 
-test('all blogs are returned', async()=>{
-    const response = await api.get('/api/blogs')
-    assert.strictEqual(response.body.length, helper.initialBlogs.length)
-})
+//test part 4.10
 test(' a valid blog can be added', async()=>{
     const newBlog = {
         title: 'Third Blog',
