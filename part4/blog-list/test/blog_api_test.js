@@ -13,10 +13,24 @@ const api = supertest(app)
  
 beforeEach(async() => {
     await Blog.deleteMany({})
-    let blogObject = new Blog(helper.initialBlogs[0])
-    await blogObject.save()
-    blogObject = new Blog(helper.initialBlogs[1])
-    await blogObject.save()
+    const blogObjs = helper.initialBlogs.map(blog => new Blog(blog))
+    const promiseArray = blogObjs.map(blog=>blog.save())
+    await Promise.all(promiseArray)
+
+    // for (let blog of helper.initialBlogs){
+    //     let blogObj = new Blog(blog)
+    //     await blogObj.save()
+    // }
+
+    // for (let blogKey in helper.initialBlogs){
+    //     let blogObj = new Blog(helper.initialBlogs[blogKey])
+    //     await blogObj.save()
+    // }
+
+    // let blogObject = new Blog(helper.initialBlogs[0])
+    // await blogObject.save()
+    // blogObject = new Blog(helper.initialBlogs[1])
+    // await blogObject.save()
 })
 
 test('blogs are returned as json', async () => {
