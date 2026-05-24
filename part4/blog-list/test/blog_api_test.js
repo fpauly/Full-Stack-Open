@@ -130,6 +130,32 @@ test('a blog with no likes property default to 0',async()=>{
 
     assert.strictEqual(savedBlog.body.likes,0)
 })
+
+//test part 4.12
+test('blog without title or url return 400', async()=>{
+    const newBlog_noTitle = {
+        author:'fan',
+        url:'http://test.com/123',
+    }
+    const newBlog_noUrl = {
+        title:'no_url',
+        author:'fan',
+    }
+    // const a = await api
+    await api
+    .post('/api/blogs')
+    .send(newBlog_noTitle)
+    .expect(400)
+    .expect('Content-Type',/application\/json/)
+    // console.log('look here')
+    // console.log(a)
+
+    await api
+    .post('/api/blogs')
+    .send(newBlog_noUrl)
+    .expect(400)
+    .expect('Content-Type',/application\/json/)
+})
 after(async() => { 
     await mongoose.connection.close()
 }) 
