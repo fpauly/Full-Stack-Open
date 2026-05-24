@@ -1,0 +1,34 @@
+const Blog = require('../models/blog')
+
+const initialBlogs = [
+    {
+        title: 'First Blog',
+        author: 'Fan',
+        url: 'http://test.com/1',
+        likes: 10
+    },
+    {
+        title: 'Second Blog',
+        author: 'Fan',
+        url: 'http://test.com/2',
+        likes: 20
+    }
+]
+
+const nonExistingId = async()=>{
+    const blog = new Blog ({title:'thisisforemptyblog'})
+    await blog.save()
+    await blog.deleteOne()
+    return blog._id.toString()
+}
+
+const blogsInDb = async()=>{
+    const blogs = await Blog.find({})
+    return blogs.map(note=>note.toJSON())
+}
+
+module.exports = {
+    initialBlogs,
+    nonExistingId,
+    blogsInDb
+}

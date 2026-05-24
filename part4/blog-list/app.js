@@ -8,14 +8,14 @@ const blogsRouter = require('./controllers/blogController')
 const app = express()
 app.get('/health', (req, res) => res.send('ok')) // for
 
-// app.use(express.json)
+// app.use(express.json())
 
-logger.info('Connect to server')
+// logger.info('Connected to server')
 
 mongoose
   .connect(config.MONGODB_URI)
   .then(() => {
-    logger.info('Connect to MongoDB')
+    logger.info('Connected to MongoDB')
   })
   .catch((error) => {
     logger.error('Error connect to MongoDB', error.message)
