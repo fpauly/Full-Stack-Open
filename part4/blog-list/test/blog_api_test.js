@@ -78,6 +78,8 @@ test(' a valid blog can be added', async()=>{
     assert(contents.includes('Third Blog'))
 })
 
+
+
 test('blog without title is not added', async()=>{
     const newBlog = {
         title:'',
@@ -108,6 +110,25 @@ test('a specific blog can be viewed', async()=>{
         .expect('Content-Type', /application\/json/)
 
     assert.deepStrictEqual(resultBlog.body,blogToView)
+})
+
+//test part 4.11
+test('a blog with no likes property default to 0',async()=>{
+    const newBlog = {
+        title: 'blog with no likes property',
+        author: 'Fan',
+        url: 'test.com/1118'
+    }
+    const savedBlog = await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(201)
+    .expect('Content-Type', /application\/json/)
+
+    const response = await helper.blogsInDb()
+    assert.strictEqual(response.length, helper.initialBlogs.length+1)
+
+    assert.strictEqual(savedBlog.body.likes,0)
 })
 after(async() => { 
     await mongoose.connection.close()
