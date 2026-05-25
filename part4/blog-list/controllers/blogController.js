@@ -3,8 +3,8 @@ const { response } = require('../app')
 const Blog = require('../models/blog')
 const logger = require('../utils/logger')
 
-blogsRouter.get('/', async(req, res,next) => {
-
+blogsRouter.get('/', async(req, res) => {
+  // throw new Error('test error')
   // logger.info('request arrived')
   // try {
     const blogs = await Blog.find({})
@@ -18,7 +18,7 @@ blogsRouter.get('/', async(req, res,next) => {
   // }).catch(next)
 })
 
-blogsRouter.get('/:id', async(req, res, next) => {
+blogsRouter.get('/:id', async(req, res) => {
   // try {
     const blog = await Blog.findById(req.params.id)
     if (blog) res.json(blog)
@@ -35,7 +35,7 @@ blogsRouter.get('/:id', async(req, res, next) => {
   //   .catch((error) => next(error))
 })
 
-blogsRouter.post('/',async(req,res,next)=>{
+blogsRouter.post('/',async(req,res)=>{
   const body = req.body
   const blog = new Blog({
     title:body.title,
