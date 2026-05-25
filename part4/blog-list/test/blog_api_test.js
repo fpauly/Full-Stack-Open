@@ -171,6 +171,23 @@ describe('when there is initially some blogs saved',()=>{
         .expect('Content-Type',/application\/json/)
     })
   })
+
+  describe('update of a blog',()=>{
+    test('succeds updates a blog likes',async()=>{
+      const blogs = await helper.blogsInDb()
+      const newBlog = blogs[0]
+      newBlog.likes = 100
+      const updateBlog = await api
+                              .put(`/api/blogs/${newBlog.id}`)
+                              .send(newBlog)
+                              .expect(200)
+                              .expect('Content-Type',/application\/json/)
+      assert.strictEqual(updateBlog.body.likes,100)
+      
+
+    })
+  })
+
   describe('deletion of a blog',()=>{
     test('succeeds with status code 204 if id is valid', async()=>{
       const blogsAtStart = await helper.blogsInDb()
