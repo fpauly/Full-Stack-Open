@@ -6,7 +6,8 @@ const assert = require('node:assert')
 const { before } = require('lodash')
 const Blog = require('../models/blog')
 const { title } = require('node:process')
-const helper = require('./blog_api_test_helper')
+const bcrypt = require('bcrypt')
+const helper = require('./blog_test_helper')
 
 const api = supertest(app)
 
