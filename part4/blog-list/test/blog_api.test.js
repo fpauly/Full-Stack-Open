@@ -203,12 +203,13 @@ describe('when there is initially some blogs saved',()=>{
   })
 })
 
+//part 4.15
 describe('when there is initially one user in db',()=>{
   beforeEach(async()=>{
     await User.deleteMany({})
 
     const passwordHash = await bcrypt.hash('123456',10)
-    const user = new User({username: 'root',passwordHash})
+    const user = new User({username: 'root',name: 'admin',passwordHash})
 
     await user.save()
   })
