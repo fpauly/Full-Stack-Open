@@ -3,10 +3,11 @@ const mongoose = require('mongoose')
 const supertest = require('supertest')
 const app = require('../app')
 const assert = require('node:assert')
-const { before } = require('lodash')
 const Blog = require('../models/blog')
 const { title } = require('node:process')
-const helper = require('./blog_api_test_helper')
+const bcrypt = require('bcrypt')
+const helper = require('./blog_test_helper')
+const User = require('../models/user')
 
 const api = supertest(app)
 
@@ -199,6 +200,42 @@ describe('when there is initially some blogs saved',()=>{
       assert(!ids.includes(blogToDelete.id))
       assert.strictEqual(blogsAtStart.length,blogsAtEnd.length+1)
     })
+  })
+})
+
+describe('when there is initially one user in db',()=>{
+  beforeEach(async()=>{
+    await User.deleteMany({})
+
+    const passwordHash = await bcrypt.hash('123456',10)
+    const user = new User({username: 'root',passwordHash})
+
+    await user.save()
+  })
+
+  test('creation succeeds with a fresh username', async()=>{
+    const usersAtStart = await helper.usersInDb()
+
+    const newUser = {
+      username:'fan',
+      name:'fan fan',
+      password:'123456'
+    }
+
+    await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(201)
+      .expect('Content-Type',/application\/json/)
+
+    const usersAtEnd = await helper.usersInDb()
+    assert.strictEqual(usersAtStart.length+1,usersAtEnd.length)
+
+    const usernames = usersAtEnd.map(u=>u.username)
+    usersAtEnd.forEach(u=>console.log(u.username))
+   
+    
+    assert(usernames.includes(newUser.username))
   })
 })
 after(async() => { 
