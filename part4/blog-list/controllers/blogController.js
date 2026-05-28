@@ -3,6 +3,7 @@ const { request, response } = require('../app')
 // const { response } = require('../app')
 const Blog = require('../models/blog')
 const logger = require('../utils/logger')
+const User = require('../models/user')
 
 blogsRouter.get('/', async(req, res) => {
   // throw new Error('test error')
@@ -38,11 +39,19 @@ blogsRouter.get('/:id', async(req, res) => {
 
 blogsRouter.post('/',async(req,res)=>{
   const body = req.body
+  const user = await User.findById(req.userId)
+
+  if(!user) {
+    return res.status(400).json({error: 'userId missing or not valid'})
+  }
+
+
   const blog = new Blog({
     title:body.title,
     author:body.author,
     url:body.url,
-    likes:body.likes
+    likes:body.likes,
+    user: user._id
   })
   // try{
     const savedBlog = await blog.save()

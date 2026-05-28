@@ -7,10 +7,10 @@ const userSchema = new mongoose.Schema({
     },
     name: String,
     passwordHash: String,
-    // blogs:[{
-    //     type: mongoose.Schema.Types.ObjectId,
-    //     ref: 'Blog'
-    // }]
+    blogs:[{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Blog'
+    }]
 })
 
 //to json 在验证之后生效，可以删除 return res.json(...)
