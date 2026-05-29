@@ -9,7 +9,7 @@ blogsRouter.get('/', async(req, res) => {
   // throw new Error('test error')
   // logger.info('request arrived')
   // try {
-    const blogs = await Blog.find({})
+    const blogs = await Blog.find({}).populate('user',{username:1, name:1})
     res.status(200).json(blogs)
   // } catch(error){
   //   next(error)
@@ -22,7 +22,7 @@ blogsRouter.get('/', async(req, res) => {
 
 blogsRouter.get('/:id', async(req, res) => {
   // try {
-    const blog = await Blog.findById(req.params.id)
+    const blog = await Blog.findById(req.params.id).populate('user',{username:1, name: 1})
     if (blog) res.json(blog)
       else res.status(404).end()
   // } catch(error) {
@@ -55,6 +55,8 @@ blogsRouter.post('/',async(req,res)=>{
   })
   // try{
     const savedBlog = await blog.save()
+    user.blogs = user.blogs.concat(savedBlog._id)
+    await user.save()
     // res.status(201)
     // res.json(savedBlog)
     res.status(201).json(savedBlog)

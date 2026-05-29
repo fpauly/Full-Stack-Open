@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const logger = require('../utils/logger')
 const userSchema = new mongoose.Schema({
     username: {
         type: String,
@@ -7,12 +8,13 @@ const userSchema = new mongoose.Schema({
     },
     name: String,
     passwordHash: String,
+    
     blogs:[{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Blog'
     }]
 })
-
+// logger.info('test')
 //to json 在验证之后生效，可以删除 return res.json(...)
 userSchema.set('toJSON',{
     transform:(document, returnObj)=>{

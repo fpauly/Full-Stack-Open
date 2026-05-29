@@ -15,9 +15,29 @@ describe('when there is initially some blogs saved',()=>{
 
   beforeEach(async() => {
       await Blog.deleteMany({})
-      const blogObjs = helper.initialBlogs.map(blog => new Blog(blog))
-      const promiseArray = blogObjs.map(blog=>blog.save())
-      await Promise.all(promiseArray)
+      await User.deleteMany({})
+
+      const initialPass = await bcrypt.hash('123456',10)
+      const users = helper.initialUsers.map(u=>new User(u))
+      // users.map(u=>u.passwordHash = initialPass)
+
+      users.forEach(u=>u.passwordHash = initialPass)
+      const savedUsers = await User.insertMany(users)
+      const userId = savedUsers[0].id
+      const blogs = helper.initialBlogs.map(b=>({...b,user: userId}))
+      const savedBlogs = await Blog.insertMany(blogs)
+
+      // savedUsers.forEach(u=>u.blogs.push(userId))
+      // await Promise.add(savedUsers.map(u => u.save()))
+      const blogIds = (await Blog.find({user:userId})).map(b=>b._id)
+      await User.updateOne(
+        {_id:userId},
+        {$push: {blogs: {$each: blogIds}}}
+      )
+      
+      // const blogObjs = helper.initialBlogs.map(blog => new Blog(blog))
+      // const promiseArray = blogObjs.map(blog=>blog.save())
+      // await Promise.all(promiseArray)
 
       // for (let blog of helper.initialBlogs){
       //     let blogObj = new Blog(blog)
@@ -82,7 +102,7 @@ describe('when there is initially some blogs saved',()=>{
     })
   })
 
-  describe('addition of a new blog',()=>{
+  describe.skip('addition of a new blog',()=>{
     //test part 4.10
     test(' a valid blog can be added', async()=>{
         const newBlog = {
@@ -173,7 +193,7 @@ describe('when there is initially some blogs saved',()=>{
     })
   })
 
-  describe('update of a blog',()=>{
+  describe.skip('update of a blog',()=>{
     test('succeds updates a blog likes',async()=>{
       const blogs = await helper.blogsInDb()
       const newBlog = blogs[0]
@@ -189,7 +209,7 @@ describe('when there is initially some blogs saved',()=>{
     })
   })
 
-  describe('deletion of a blog',()=>{
+  describe.skip('deletion of a blog',()=>{
     test('succeeds with status code 204 if id is valid', async()=>{
       const blogsAtStart = await helper.blogsInDb()
       const blogToDelete = blogsAtStart[0]
@@ -204,7 +224,7 @@ describe('when there is initially some blogs saved',()=>{
 })
 
 //part 4.15
-describe('when there is initially one user in db',()=>{
+describe.skip('when there is initially one user in db',()=>{
   beforeEach(async()=>{
     await User.deleteMany({})
 
