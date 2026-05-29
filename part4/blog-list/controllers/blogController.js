@@ -9,7 +9,7 @@ blogsRouter.get('/', async(req, res) => {
   // throw new Error('test error')
   // logger.info('request arrived')
   // try {
-    const blogs = await Blog.find({}).populate('user',{username:1, name:1})
+    const blogs = await Blog.find({})
     res.status(200).json(blogs)
   // } catch(error){
   //   next(error)
@@ -22,7 +22,7 @@ blogsRouter.get('/', async(req, res) => {
 
 blogsRouter.get('/:id', async(req, res) => {
   // try {
-    const blog = await Blog.findById(req.params.id).populate('user',{username:1, name: 1})
+    const blog = await Blog.findById(req.params.id).populate('user',{username:1,name:1})
     if (blog) res.json(blog)
       else res.status(404).end()
   // } catch(error) {
@@ -39,7 +39,7 @@ blogsRouter.get('/:id', async(req, res) => {
 
 blogsRouter.post('/',async(req,res)=>{
   const body = req.body
-  const user = await User.findById(req.userId)
+  const user = await User.findById(body.user)
 
   if(!user) {
     return res.status(400).json({error: 'userId missing or not valid'})
@@ -55,10 +55,10 @@ blogsRouter.post('/',async(req,res)=>{
   })
   // try{
     const savedBlog = await blog.save()
-    user.blogs = user.blogs.concat(savedBlog._id)
-    await user.save()
     // res.status(201)
     // res.json(savedBlog)
+    user.blogs = user.blogs.concat(savedBlog._id)
+    await user.save()
     res.status(201).json(savedBlog)
   // }catch(error){
   //   next(error)

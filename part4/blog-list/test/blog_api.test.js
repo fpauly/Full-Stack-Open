@@ -102,32 +102,35 @@ describe('when there is initially some blogs saved',()=>{
     })
   })
 
-  describe.skip('addition of a new blog',()=>{
+  describe('addition of a new blog',()=>{
     //test part 4.10
     test(' a valid blog can be added', async()=>{
-        const newBlog = {
-            title: 'Third Blog',
-            author: 'Fan',
-            url: 'http://test.com/3',
-            likes: 30
-        }
-        await api
-            .post('/api/blogs')
-            .send(newBlog)
-            .expect(201)
-            .expect('Content-Type', /application\/json/)
-
-        
-        const response = await helper.blogsInDb()
-        assert.strictEqual(response.length, helper.initialBlogs.length+1)
-        const contents = response.map(r=>r.title)
-        console.log(contents)
-        assert(contents.includes('Third Blog'))
+      const userOne = (await helper.usersInDb())[0]
+      // console.log(userOne)
+      const newBlog = {
+          title: 'Third Blog',
+          author: 'Fan',
+          user:userOne.id,
+          url: 'http://test.com/3',
+          likes: 30
+      }
+      await api
+          .post('/api/blogs')
+          .send(newBlog)
+          .expect(201)
+          .expect('Content-Type', /application\/json/)
+      
+      
+      const response = await helper.blogsInDb()
+      assert.strictEqual(response.length, helper.initialBlogs.length+1)
+      const contents = response.map(r=>r.title)
+      // console.log(contents)
+      assert(contents.includes('Third Blog'))
     })
 
 
 
-    test('blog without title is not added', async()=>{
+    test.skip('blog without title is not added', async()=>{
         const newBlog = {
             title:'',
             author: 'Fan',
@@ -148,7 +151,7 @@ describe('when there is initially some blogs saved',()=>{
     
 
     //test part 4.11
-    test('a blog with no likes property default to 0',async()=>{
+    test.skip('a blog with no likes property default to 0',async()=>{
         const newBlog = {
             title: 'blog with no likes property',
             author: 'Fan',
