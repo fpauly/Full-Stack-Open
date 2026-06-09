@@ -130,10 +130,12 @@ describe('when there is initially some blogs saved',()=>{
 
 
 
-    test.skip('blog without title is not added', async()=>{
+    test('blog without title is not added', async()=>{
+      const userOne = (await helper.usersInDb())[0]
         const newBlog = {
             title:'',
             author: 'Fan',
+            user:userOne.id,
             url: 'http://empty.com',
             likes: 0
         }
@@ -151,10 +153,13 @@ describe('when there is initially some blogs saved',()=>{
     
 
     //test part 4.11
-    test.skip('a blog with no likes property default to 0',async()=>{
+    test('a blog with no likes property default to 0',async()=>{
+        const userOne = (await helper.usersInDb())[0]
+
         const newBlog = {
             title: 'blog with no likes property',
             author: 'Fan',
+            user:userOne.id,
             url: 'test.com/1118'
         }
         const savedBlog = await api
@@ -196,7 +201,7 @@ describe('when there is initially some blogs saved',()=>{
     })
   })
 
-  describe.skip('update of a blog',()=>{
+  describe('update of a blog',()=>{
     test('succeds updates a blog likes',async()=>{
       const blogs = await helper.blogsInDb()
       const newBlog = blogs[0]
@@ -212,7 +217,7 @@ describe('when there is initially some blogs saved',()=>{
     })
   })
 
-  describe.skip('deletion of a blog',()=>{
+  describe('deletion of a blog',()=>{
     test('succeeds with status code 204 if id is valid', async()=>{
       const blogsAtStart = await helper.blogsInDb()
       const blogToDelete = blogsAtStart[0]
@@ -227,7 +232,7 @@ describe('when there is initially some blogs saved',()=>{
 })
 
 //part 4.15
-describe.skip('when there is initially one user in db',()=>{
+describe('when there is initially one user in db',()=>{
   beforeEach(async()=>{
     await User.deleteMany({})
 
