@@ -9,7 +9,7 @@ blogsRouter.get('/', async(req, res) => {
   // throw new Error('test error')
   // logger.info('request arrived')
   // try {
-    const blogs = await Blog.find({})
+    const blogs = await Blog.find({}).populate('user',{username:1,name:1})
     res.status(200).json(blogs)
   // } catch(error){
   //   next(error)
@@ -85,7 +85,7 @@ blogsRouter.put('/:id',async(request,response)=>{
 })
 
 blogsRouter.delete('/:id', async(request,response)=>{
-  await Blog.findByIdAndDelete(request.params.id)
+  await Blog.findByIdAndDelete(request.params.id).populate('user',{username:1,name:1})
   response.status(204).end()
 })
 module.exports = blogsRouter
