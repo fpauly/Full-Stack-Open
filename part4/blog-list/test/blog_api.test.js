@@ -266,6 +266,50 @@ describe('when there is initially one user in db',()=>{
     
     assert(usernames.includes(newUser.username))
   })
+  test('creation need valid username and password', async()=>{
+    const usersAtStart = await helper.usersInDb()
+    const newUser_noUsername = {
+      name:'no username',
+      password:'123456'
+    }
+    const newUser_noPassword = {
+      username:'no password',
+      name:'no password'
+    }
+    await api
+      .post('/api/users')
+      .send(newUser_noUsername)
+      .expect(400)
+    await api
+      .post('/api/users')
+      .send(newUser_noPassword)
+      .expect(400)
+    const usersAtEnd = await helper.usersInDb()
+    assert.strictEqual(usersAtStart.length,usersAtEnd.length)
+  })
+  test('creation need username and password at least 3 characters long', async()=>{
+    const usersAtStart = await helper.usersInDb()
+    const newUser_shortUsername = {
+      username:'ab',
+      name:'short username',
+      password:'123456'
+    }
+    const newUser_shortPassword = {
+      username:'short password',
+      name:'short password',
+      password:'12'
+    }
+    await api
+      .post('/api/users')
+      .send(newUser_shortUsername)
+      .expect(400)
+    await api
+      .post('/api/users')
+      .send(newUser_shortPassword)
+      .expect(400)
+    const usersAtEnd = await helper.usersInDb()
+    assert.strictEqual(usersAtStart.length,usersAtEnd.length)
+  })
 })
 after(async() => { 
     await mongoose.connection.close()
