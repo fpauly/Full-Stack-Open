@@ -8,7 +8,8 @@ const { title } = require('node:process')
 const bcrypt = require('bcrypt')
 const helper = require('./blog_test_helper')
 const User = require('../models/user')
-
+const loing = require('../controllers/login')
+const loginRouter = require('../controllers/login')
 const api = supertest(app)
 
 describe('when there is initially some blogs saved',()=>{    
@@ -103,10 +104,43 @@ describe('when there is initially some blogs saved',()=>{
   })
 
   describe('addition of a new blog',()=>{
+
+    // let token
+    // beforeEach(async()=>{
+    //   //login
+      
+
+    //   const loginData = {
+    //     username:'fan',
+    //     password:'123456'
+    //   }
+    //   const loginResult = await api
+    //                             .post('/api/login')
+    //                             .send(loginData)
+    //                             .expect(200)
+    //                             .expect('Content-Type',/application\/json/)
+    //   token = loginResult.body.token
+    // })
     //test part 4.10
     test(' a valid blog can be added', async()=>{
+
+     
+
       const userOne = (await helper.usersInDb())[0]
       // console.log(userOne)
+
+       //login
+      const loginResult = await api
+                                .post('/api/login')
+                                .send({
+                                  username:userOne.username,
+                                  password:'123456'
+                                })
+                                .expect(200)
+                                .expect('Content-Type',/application\/json/)
+      token = loginResult.body.token
+      //login, get token
+
       const newBlog = {
           title: 'Third Blog',
           author: 'Fan',
@@ -116,6 +150,7 @@ describe('when there is initially some blogs saved',()=>{
       }
       await api
           .post('/api/blogs')
+          .set('Authorization', `Bearer ${token}`)
           .send(newBlog)
           .expect(201)
           .expect('Content-Type', /application\/json/)
@@ -132,6 +167,17 @@ describe('when there is initially some blogs saved',()=>{
 
     test('blog without title is not added', async()=>{
       const userOne = (await helper.usersInDb())[0]
+       //login
+      const loginResult = await api
+                                .post('/api/login')
+                                .send({
+                                  username:userOne.username,
+                                  password:'123456'
+                                })
+                                .expect(200)
+                                .expect('Content-Type',/application\/json/)
+      token = loginResult.body.token
+      //login, get token
         const newBlog = {
             title:'',
             author: 'Fan',
@@ -141,6 +187,7 @@ describe('when there is initially some blogs saved',()=>{
         }
         await api
             .post('/api/blogs/')
+            .set('Authorization',`Bearer ${token}`)
             .send(newBlog)
             .expect(400)
             
