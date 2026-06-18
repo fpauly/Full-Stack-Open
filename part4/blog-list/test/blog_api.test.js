@@ -217,100 +217,100 @@ describe('when there is initially some blogs saved',()=>{
     })
   })
 
-  // describe('deletion of a blog',()=>{
-  //   test('succeeds with status code 204 if id is valid', async()=>{
-  //     const blogsAtStart = await helper.blogsInDb()
-  //     const blogToDelete = blogsAtStart[0]
+  describe('deletion of a blog',()=>{
+    test('succeeds with status code 204 if id is valid', async()=>{
+      const blogsAtStart = await helper.blogsInDb()
+      const blogToDelete = blogsAtStart[0]
 
-  //     await api.delete(`/api/blogs/${blogToDelete.id}`).expect(204)
-  //     const blogsAtEnd = await helper.blogsInDb()
-  //     const ids = blogsAtEnd.map(b=>b.id)
-  //     assert(!ids.includes(blogToDelete.id))
-  //     assert.strictEqual(blogsAtStart.length,blogsAtEnd.length+1)
-  //   })
-  // })
+      await api.delete(`/api/blogs/${blogToDelete.id}`).expect(204)
+      const blogsAtEnd = await helper.blogsInDb()
+      const ids = blogsAtEnd.map(b=>b.id)
+      assert(!ids.includes(blogToDelete.id))
+      assert.strictEqual(blogsAtStart.length,blogsAtEnd.length+1)
+    })
+  })
 })
 
-// //part 4.15
-// describe('when there is initially one user in db',()=>{
-//   beforeEach(async()=>{
-//     await User.deleteMany({})
+//part 4.15
+describe('when there is initially one user in db',()=>{
+  beforeEach(async()=>{
+    await User.deleteMany({})
 
-//     const passwordHash = await bcrypt.hash('123456',10)
-//     const user = new User({username: 'root',name: 'admin',passwordHash})
+    const passwordHash = await bcrypt.hash('123456',10)
+    const user = new User({username: 'root',name: 'admin',passwordHash})
 
-//     await user.save()
-//   })
+    await user.save()
+  })
 
-//   test('creation succeeds with a fresh username', async()=>{
-//     const usersAtStart = await helper.usersInDb()
+  test('creation succeeds with a fresh username', async()=>{
+    const usersAtStart = await helper.usersInDb()
 
-//     const newUser = {
-//       username:'fan',
-//       name:'fan fan',
-//       password:'123456'
-//     }
+    const newUser = {
+      username:'fan',
+      name:'fan fan',
+      password:'123456'
+    }
 
-//     await api
-//       .post('/api/users')
-//       .send(newUser)
-//       .expect(201)
-//       .expect('Content-Type',/application\/json/)
+    await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(201)
+      .expect('Content-Type',/application\/json/)
 
-//     const usersAtEnd = await helper.usersInDb()
-//     assert.strictEqual(usersAtStart.length+1,usersAtEnd.length)
+    const usersAtEnd = await helper.usersInDb()
+    assert.strictEqual(usersAtStart.length+1,usersAtEnd.length)
 
-//     const usernames = usersAtEnd.map(u=>u.username)
-//     usersAtEnd.forEach(u=>console.log(u.username))
+    const usernames = usersAtEnd.map(u=>u.username)
+    usersAtEnd.forEach(u=>console.log(u.username))
    
     
-//     assert(usernames.includes(newUser.username))
-//   })
-//   test('creation need valid username and password', async()=>{
-//     const usersAtStart = await helper.usersInDb()
-//     const newUser_noUsername = {
-//       name:'no username',
-//       password:'123456'
-//     }
-//     const newUser_noPassword = {
-//       username:'no password',
-//       name:'no password'
-//     }
-//     await api
-//       .post('/api/users')
-//       .send(newUser_noUsername)
-//       .expect(400)
-//     await api
-//       .post('/api/users')
-//       .send(newUser_noPassword)
-//       .expect(400)
-//     const usersAtEnd = await helper.usersInDb()
-//     assert.strictEqual(usersAtStart.length,usersAtEnd.length)
-//   })
-//   test('creation need username and password at least 3 characters long', async()=>{
-//     const usersAtStart = await helper.usersInDb()
-//     const newUser_shortUsername = {
-//       username:'ab',
-//       name:'short username',
-//       password:'123456'
-//     }
-//     const newUser_shortPassword = {
-//       username:'short password',
-//       name:'short password',
-//       password:'12'
-//     }
-//     await api
-//       .post('/api/users')
-//       .send(newUser_shortUsername)
-//       .expect(400)
-//     await api
-//       .post('/api/users')
-//       .send(newUser_shortPassword)
-//       .expect(400)
-//     const usersAtEnd = await helper.usersInDb()
-//     assert.strictEqual(usersAtStart.length,usersAtEnd.length)
-//   })
-// })
+    assert(usernames.includes(newUser.username))
+  })
+  test('creation need valid username and password', async()=>{
+    const usersAtStart = await helper.usersInDb()
+    const newUser_noUsername = {
+      name:'no username',
+      password:'123456'
+    }
+    const newUser_noPassword = {
+      username:'no password',
+      name:'no password'
+    }
+    await api
+      .post('/api/users')
+      .send(newUser_noUsername)
+      .expect(400)
+    await api
+      .post('/api/users')
+      .send(newUser_noPassword)
+      .expect(400)
+    const usersAtEnd = await helper.usersInDb()
+    assert.strictEqual(usersAtStart.length,usersAtEnd.length)
+  })
+  test('creation need username and password at least 3 characters long', async()=>{
+    const usersAtStart = await helper.usersInDb()
+    const newUser_shortUsername = {
+      username:'ab',
+      name:'short username',
+      password:'123456'
+    }
+    const newUser_shortPassword = {
+      username:'short password',
+      name:'short password',
+      password:'12'
+    }
+    await api
+      .post('/api/users')
+      .send(newUser_shortUsername)
+      .expect(400)
+    await api
+      .post('/api/users')
+      .send(newUser_shortPassword)
+      .expect(400)
+    const usersAtEnd = await helper.usersInDb()
+    assert.strictEqual(usersAtStart.length,usersAtEnd.length)
+  })
+})
 after(async() => { 
     await mongoose.connection.close()
 }) 

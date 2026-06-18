@@ -4,6 +4,15 @@ const { request, response } = require('../app')
 const Blog = require('../models/blog')
 const logger = require('../utils/logger')
 const User = require('../models/user')
+const jwt = require('jsonwebtoken')
+
+const getTokenFrom = request =>{
+  const authorization = request.get('authorization')
+  if (authorization && authorization.startsWith('Bearer')) {
+    return authorization.replace('Bearer ','')
+  }
+  return null
+}
 
 blogsRouter.get('/', async(req, res) => {
   // throw new Error('test error')
@@ -39,7 +48,14 @@ blogsRouter.get('/:id', async(req, res) => {
 
 blogsRouter.post('/',async(req,res)=>{
   const body = req.body
-  const user = await User.findById(body.user)
+
+  const decodedToken = jwt.verify(getTokenFrom(req),process.env.SECRET)
+  if(!decodedToken.id) {
+    return response.status(401).json({error: 'token invalid'})
+
+  }
+  const user = await User.findById(decodedToken.id)
+  // const user = await User.findById(body.user)
 
   if(!user) {
     return res.status(400).json({error: 'userId missing or not valid'})

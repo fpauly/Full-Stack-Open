@@ -22,3 +22,13 @@ Content-Type: application/json
 ###
 get http://localhost:3018/api/blogs
 
+
+###
+POST  http://localhost:3018/api/login
+Content-Type: application/json
+
+{
+  "username":"fan",
+  "password":"123456"
+}
+ 
