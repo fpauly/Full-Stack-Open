@@ -1,5 +1,19 @@
+const { urlencoded } = require('express')
 const Blog = require('../models/blog')
 const User = require('../models/user')
+
+const initialUsers = [
+    {
+        username: 'fan',
+        name: 'Fan',
+         
+    },
+    {
+        username: 'lei',
+        name: 'Lei',
+       
+    }
+]
 
 const initialBlogs = [
     {
@@ -24,16 +38,17 @@ const nonExistingId = async()=>{
 }
 
 const blogsInDb = async()=>{
-    const blogs = await Blog.find({})
-    return blogs.map(note=>note.toJSON())
+    const blogs = await Blog.find({}).populate('user',{username:1, name:1})
+    return blogs.map(b=>b.toJSON())
 }
 
 const usersInDb = async () =>{
-    const users = await User.find({})
+    const users = await User.find({}).populate('blogs',{title:1,author:1, url:1,likes:1})
     return users.map(u=>u.toJSON())
 }
 
 module.exports = {
+    initialUsers,
     initialBlogs,
     nonExistingId,
     blogsInDb,

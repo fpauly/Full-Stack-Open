@@ -15,9 +15,29 @@ describe('when there is initially some blogs saved',()=>{
 
   beforeEach(async() => {
       await Blog.deleteMany({})
-      const blogObjs = helper.initialBlogs.map(blog => new Blog(blog))
-      const promiseArray = blogObjs.map(blog=>blog.save())
-      await Promise.all(promiseArray)
+      await User.deleteMany({})
+
+      const initialPass = await bcrypt.hash('123456',10)
+      const users = helper.initialUsers.map(u=>new User(u))
+      // users.map(u=>u.passwordHash = initialPass)
+
+      users.forEach(u=>u.passwordHash = initialPass)
+      const savedUsers = await User.insertMany(users)
+      const userId = savedUsers[0].id
+      const blogs = helper.initialBlogs.map(b=>({...b,user: userId}))
+      const savedBlogs = await Blog.insertMany(blogs)
+
+      // savedUsers.forEach(u=>u.blogs.push(userId))
+      // await Promise.add(savedUsers.map(u => u.save()))
+      const blogIds = (await Blog.find({user:userId})).map(b=>b._id)
+      await User.updateOne(
+        {_id:userId},
+        {$push: {blogs: {$each: blogIds}}}
+      )
+      
+      // const blogObjs = helper.initialBlogs.map(blog => new Blog(blog))
+      // const promiseArray = blogObjs.map(blog=>blog.save())
+      // await Promise.all(promiseArray)
 
       // for (let blog of helper.initialBlogs){
       //     let blogObj = new Blog(blog)
@@ -85,32 +105,37 @@ describe('when there is initially some blogs saved',()=>{
   describe('addition of a new blog',()=>{
     //test part 4.10
     test(' a valid blog can be added', async()=>{
-        const newBlog = {
-            title: 'Third Blog',
-            author: 'Fan',
-            url: 'http://test.com/3',
-            likes: 30
-        }
-        await api
-            .post('/api/blogs')
-            .send(newBlog)
-            .expect(201)
-            .expect('Content-Type', /application\/json/)
-
-        
-        const response = await helper.blogsInDb()
-        assert.strictEqual(response.length, helper.initialBlogs.length+1)
-        const contents = response.map(r=>r.title)
-        console.log(contents)
-        assert(contents.includes('Third Blog'))
+      const userOne = (await helper.usersInDb())[0]
+      // console.log(userOne)
+      const newBlog = {
+          title: 'Third Blog',
+          author: 'Fan',
+          user:userOne.id,
+          url: 'http://test.com/3',
+          likes: 30
+      }
+      await api
+          .post('/api/blogs')
+          .send(newBlog)
+          .expect(201)
+          .expect('Content-Type', /application\/json/)
+      
+      
+      const response = await helper.blogsInDb()
+      assert.strictEqual(response.length, helper.initialBlogs.length+1)
+      const contents = response.map(r=>r.title)
+      // console.log(contents)
+      assert(contents.includes('Third Blog'))
     })
 
 
 
     test('blog without title is not added', async()=>{
+      const userOne = (await helper.usersInDb())[0]
         const newBlog = {
             title:'',
             author: 'Fan',
+            user:userOne.id,
             url: 'http://empty.com',
             likes: 0
         }
@@ -129,9 +154,12 @@ describe('when there is initially some blogs saved',()=>{
 
     //test part 4.11
     test('a blog with no likes property default to 0',async()=>{
+        const userOne = (await helper.usersInDb())[0]
+
         const newBlog = {
             title: 'blog with no likes property',
             author: 'Fan',
+            user:userOne.id,
             url: 'test.com/1118'
         }
         const savedBlog = await api
@@ -203,12 +231,13 @@ describe('when there is initially some blogs saved',()=>{
   })
 })
 
+//part 4.15
 describe('when there is initially one user in db',()=>{
   beforeEach(async()=>{
     await User.deleteMany({})
 
     const passwordHash = await bcrypt.hash('123456',10)
-    const user = new User({username: 'root',passwordHash})
+    const user = new User({username: 'root',name: 'admin',passwordHash})
 
     await user.save()
   })
@@ -236,6 +265,50 @@ describe('when there is initially one user in db',()=>{
    
     
     assert(usernames.includes(newUser.username))
+  })
+  test('creation need valid username and password', async()=>{
+    const usersAtStart = await helper.usersInDb()
+    const newUser_noUsername = {
+      name:'no username',
+      password:'123456'
+    }
+    const newUser_noPassword = {
+      username:'no password',
+      name:'no password'
+    }
+    await api
+      .post('/api/users')
+      .send(newUser_noUsername)
+      .expect(400)
+    await api
+      .post('/api/users')
+      .send(newUser_noPassword)
+      .expect(400)
+    const usersAtEnd = await helper.usersInDb()
+    assert.strictEqual(usersAtStart.length,usersAtEnd.length)
+  })
+  test('creation need username and password at least 3 characters long', async()=>{
+    const usersAtStart = await helper.usersInDb()
+    const newUser_shortUsername = {
+      username:'ab',
+      name:'short username',
+      password:'123456'
+    }
+    const newUser_shortPassword = {
+      username:'short password',
+      name:'short password',
+      password:'12'
+    }
+    await api
+      .post('/api/users')
+      .send(newUser_shortUsername)
+      .expect(400)
+    await api
+      .post('/api/users')
+      .send(newUser_shortPassword)
+      .expect(400)
+    const usersAtEnd = await helper.usersInDb()
+    assert.strictEqual(usersAtStart.length,usersAtEnd.length)
   })
 })
 after(async() => { 
