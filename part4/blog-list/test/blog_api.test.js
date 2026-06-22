@@ -138,7 +138,7 @@ describe('when there is initially some blogs saved',()=>{
                                 })
                                 .expect(200)
                                 .expect('Content-Type',/application\/json/)
-      token = loginResult.body.token
+      const token = loginResult.body.token
       //login, get token
 
       const newBlog = {
@@ -176,7 +176,7 @@ describe('when there is initially some blogs saved',()=>{
                                 })
                                 .expect(200)
                                 .expect('Content-Type',/application\/json/)
-      token = loginResult.body.token
+      const token = loginResult.body.token
       //login, get token
         const newBlog = {
             title:'',
@@ -202,15 +202,24 @@ describe('when there is initially some blogs saved',()=>{
     //test part 4.11
     test('a blog with no likes property default to 0',async()=>{
         const userOne = (await helper.usersInDb())[0]
-
+        const loginData = await api.post('/api/login')
+                                  .send({
+                                    username:userOne.username,
+                                    password:'123456'
+                                  })
+                                  .expect(200)
+                                  .expect('Content-Type', /application\/json/)
+        const token = loginData.body.token
         const newBlog = {
             title: 'blog with no likes property',
             author: 'Fan',
             user:userOne.id,
             url: 'test.com/1118'
         }
+        
         const savedBlog = await api
         .post('/api/blogs')
+        .set('Authorization',`Bearer ${token}`)
         .send(newBlog)
         .expect(201)
         .expect('Content-Type', /application\/json/)
@@ -223,6 +232,16 @@ describe('when there is initially some blogs saved',()=>{
 
     //test part 4.12
     test('blog without title or url return 400', async()=>{
+      const users = await helper.usersInDb()
+      const userOne = users[0]
+      const loginData = await api.post('/api/login')
+                                .send({
+                                  username:userOne.username,
+                                  password:'123456'
+                                })
+                                .expect(200)
+                                .expect('Content-Type',/application\/json/)
+      const token = loginData.body.token
         const newBlog_noTitle = {
             author:'fan',
             url:'http://test.com/123',
@@ -235,6 +254,7 @@ describe('when there is initially some blogs saved',()=>{
         await api
         .post('/api/blogs')
         .send(newBlog_noTitle)
+        .set('Authorization',`Bearer ${token}`)
         .expect(400)
         .expect('Content-Type',/application\/json/)
         // console.log('look here')
@@ -242,6 +262,7 @@ describe('when there is initially some blogs saved',()=>{
 
         await api
         .post('/api/blogs')
+        .set('Authorization',`Bearer ${token}`)
         .send(newBlog_noUrl)
         .expect(400)
         .expect('Content-Type',/application\/json/)
