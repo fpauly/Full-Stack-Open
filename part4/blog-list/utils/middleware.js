@@ -32,6 +32,12 @@ const errorHandler = (error, request, response, next) => {
   next(error)
 }
 
+const tokenExtractor = (requset,response,next) => {
+
+  
+  next()
+}
+
 module.exports = {
   requestLogger,
   unknownEndpoint,
