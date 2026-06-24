@@ -8,8 +8,8 @@ const { title } = require('node:process')
 const bcrypt = require('bcrypt')
 const helper = require('./blog_test_helper')
 const User = require('../models/user')
-const loing = require('../controllers/login')
 const loginRouter = require('../controllers/login')
+const { application } = require('express')
 const api = supertest(app)
 
 describe('when there is initially some blogs saved',()=>{    
@@ -272,11 +272,21 @@ describe('when there is initially some blogs saved',()=>{
   describe('update of a blog',()=>{
     test('succeds updates a blog likes',async()=>{
       const blogs = await helper.blogsInDb()
+
+     
       const newBlog = blogs[0]
+      const userData = {
+        username:newBlog.user.username,
+        password:'123456'
+      }
+      const loginData = await api.post('/api/login').send(userData).expect(200).expect('Content-Type',/application\/json/)
+      const token = loginData.body.token
+
       newBlog.likes = 100
       const updateBlog = await api
                               .put(`/api/blogs/${newBlog.id}`)
                               .send(newBlog)
+                              .set('Authorization',`Bearer ${token}`)
                               .expect(200)
                               .expect('Content-Type',/application\/json/)
       assert.strictEqual(updateBlog.body.likes,100)
