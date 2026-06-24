@@ -267,6 +267,26 @@ describe('when there is initially some blogs saved',()=>{
         .expect(400)
         .expect('Content-Type',/application\/json/)
     })
+
+    test('blog without token can not be added and return 401', async ()=>{
+      const users = await helper.usersInDb()
+      const userOne = users[0]
+      const newBlog = {
+          title: 'Third Blog',
+          author: 'Fan',
+          user:userOne.id,
+          url: 'http://test.com/3',
+          likes: 30
+      }
+      await api
+          .post('/api/blogs')
+          .send(newBlog)
+          .expect(401)
+          .expect('Content-Type', /application\/json/)
+      
+      
+     
+    })
   })
 
   describe('update of a blog',()=>{
