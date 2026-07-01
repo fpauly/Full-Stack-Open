@@ -25,8 +25,8 @@ describe('when there is initially some blogs saved', () => {
     users.forEach(u => u.passwordHash = initialPass)
     const savedUsers = await User.insertMany(users)
     const userId = savedUsers[0].id
-    // const blogs = helper.initialBlogs.map(b => ({ ...b, user: userId }))
-    // const savedBlogs = await Blog.insertMany(blogs)
+    const blogs = helper.initialBlogs.map(b => ({ ...b, user: userId }))
+    const savedBlogs = await Blog.insertMany(blogs)
 
     // savedUsers.forEach(u=>u.blogs.push(userId))
     // await Promise.add(savedUsers.map(u => u.save()))
@@ -419,6 +419,11 @@ describe('when there is initially one user in db', () => {
       .expect(400)
     const usersAtEnd = await helper.usersInDb()
     assert.strictEqual(usersAtStart.length, usersAtEnd.length)
+  })
+
+  //add more users for part5
+  test('create more users for part5', async () => {
+    //user beafore each add more users
   })
 })
 after(async () => {
