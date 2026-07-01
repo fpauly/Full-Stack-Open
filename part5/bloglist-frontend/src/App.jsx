@@ -28,7 +28,11 @@ const App = () => {
       setUser(userData)
       setUsername('')
       setPassword('')
-    } catch {
+    } catch (error) {
+      console.log('FULL ERROR OBJECT:', error)
+      console.log('error.message:', error.message)
+      console.log('error.name:', error.name)
+      console.log('error.code:', error.code)
       setMessage('Wrong credentials')
       setTimeout(() => {
         setMessage(null)
@@ -37,38 +41,43 @@ const App = () => {
     console.log('loing in with', username, password)
   }
 
+
+  if (user === null) {
+    return (
+      <div>
+        <h2>login</h2>
+        <Notification message={message} />
+        <form onSubmit={handleLogin}>
+          <div>
+            <label htmlFor='username' >username</label>
+            <input type='text'
+              id='username'
+              value={username}
+              onChange={({ target }) => setUsername(target.value)} />
+          </div>
+
+
+          <div>
+            <label>
+              password
+              <input type='password'
+                value={password}
+                onChange={({ target }) => setPassword(target.value)}
+              />
+            </label>
+          </div>
+          <button type='submit'>login</button>
+        </form>
+      </div>
+
+    )
+  }
   return (
     <div>
-      <h2>login</h2>
+
       <Notification message={message} />
 
-
-      {user ?
-        (<div>{user.username}</div>)
-
-        : (
-          <form onSubmit={handleLogin}>
-            <div>
-              <label htmlFor='username' >username</label>
-              <input type='text'
-                id='username'
-                value={username}
-                onChange={({ target }) => setUsername(target.value)} />
-            </div>
-
-
-            <div>
-              <label>
-                password
-                <input type='password'
-                  value={password}
-                  onChange={({ target }) => setPassword(target.value)}
-                />
-              </label>
-            </div>
-            <button type='submit'>login</button>
-          </form>
-        )}
+      <div>{user.username}</div>
 
       <br></br>
       <p>below is for testing</p>
