@@ -420,11 +420,6 @@ describe('when there is initially one user in db', () => {
     const usersAtEnd = await helper.usersInDb()
     assert.strictEqual(usersAtStart.length, usersAtEnd.length)
   })
-
-  //add more users for part5
-  test('create more users for part5', async () => {
-    //user beafore each add more users
-  })
 })
 after(async () => {
   await mongoose.connection.close()
