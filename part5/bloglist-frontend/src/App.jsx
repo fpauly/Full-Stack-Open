@@ -45,7 +45,7 @@ const App = () => {
   if (user === null) {
     return (
       <div>
-        <h2>login</h2>
+        <h2>Log in to application</h2>
         <Notification message={message} />
         <form onSubmit={handleLogin}>
           <div>
@@ -74,13 +74,6 @@ const App = () => {
   }
   return (
     <div>
-
-      <Notification message={message} />
-
-      <div>{user.username}</div>
-
-      <br></br>
-      <p>below is for testing</p>
       <h2>blogs</h2>
       {blogs.map(blog =>
         <Blog key={blog.id} blog={blog} />
