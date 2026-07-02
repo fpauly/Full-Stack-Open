@@ -1,31 +1,31 @@
 const mongoose = require('mongoose')
-const logger = require('../utils/logger')
+// const logger = require('../utils/logger')
 const userSchema = new mongoose.Schema({
-    username: {
-        type: String,
-        minlength: 3,
-        required: true,
-        unique: true
-    },
-    name: String,
-    passwordHash: {
-        type: String,
-        required: true
-    },
-    blogs:[{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Blog'
-    }]
+  username: {
+    type: String,
+    minlength: 3,
+    required: true,
+    unique: true
+  },
+  name: String,
+  passwordHash: {
+    type: String,
+    required: true
+  },
+  blogs: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Blog'
+  }]
 })
 // logger.info('test')
 //to json 在验证之后生效，可以删除 return res.json(...)
-userSchema.set('toJSON',{
-    transform:(document, returnObj)=>{
-        returnObj.id = returnObj._id.toString()
-        delete returnObj._id
-        delete returnObj.__v
-        delete returnObj.passwordHash
-    }
+userSchema.set('toJSON', {
+  transform: (document, returnObj) => {
+    returnObj.id = returnObj._id.toString()
+    delete returnObj._id
+    delete returnObj.__v
+    delete returnObj.passwordHash
+  }
 })
 
-module.exports = mongoose.model('User',userSchema)
+module.exports = mongoose.model('User', userSchema)
