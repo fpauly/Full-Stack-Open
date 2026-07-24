@@ -29,16 +29,16 @@ const App = () => {
       setUsername('')
       setPassword('')
     } catch (error) {
-      console.log('FULL ERROR OBJECT:', error)
-      console.log('error.message:', error.message)
-      console.log('error.name:', error.name)
-      console.log('error.code:', error.code)
+      console.log('Full error: ', error)
+      console.log('error.message: ', error.message)
+      console.log('error.name: ', error.name)
+      console.log('error.code: ', error.code)
       setMessage('Wrong credentials')
       setTimeout(() => {
         setMessage(null)
       }, 3000)
     }
-    console.log('loing in with', username, password)
+    // console.log('loing in with', username, password)
   }
 
 
