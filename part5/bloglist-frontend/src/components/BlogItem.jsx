@@ -1,4 +1,4 @@
-const Blog = ({ blog }) => (
+const BlogItem = ({ blog }) => (
   <div>
     <div>
       {blog.title} {blog.author}
@@ -8,4 +8,4 @@ const Blog = ({ blog }) => (
   </div>
 )
 
-export default Blog
+export default BlogItem

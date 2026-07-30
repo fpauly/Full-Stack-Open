@@ -1,4 +1,5 @@
-const loginForm = ({ message, handleLogin, username, password, setUsername, setPassword }) => {
+import Notification from "./Notification"
+const LoginForm = ({ message, handleLogin, username, password, setUsername, setPassword }) => {
   return (
     <div>
       <h2>Log in to application</h2>
@@ -29,4 +30,4 @@ const loginForm = ({ message, handleLogin, username, password, setUsername, setP
   )
 }
 
-export default loginForm
+export default LoginForm
