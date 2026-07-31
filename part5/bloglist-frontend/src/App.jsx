@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
-import blogService from './services/blogs'
+import blogService from './services/BlogService'
 import Notification from './components/Notification'
-import loginService from './services/login'
+import loginService from './services/LoginService'
 import LoginForm from './components/LoginForm'
 import BlogForm from './components/BlogForm'
 
@@ -25,7 +25,10 @@ const App = () => {
     event.preventDefault()
 
     try {
+      
       const userData = await loginService.login({ username, password })
+      blogService.setToken(userData.token)
+      // console.log(userData.token)
       setUser(userData)
       setUsername('')
       setPassword('')
