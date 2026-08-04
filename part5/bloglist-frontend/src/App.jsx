@@ -21,26 +21,47 @@ const App = () => {
     fetchBlogs()
   }, [])
 
+  useEffect(() => {
+    const loggedUserJSON = window.localStorage.getItem('loggedBlogUser')
+    if (loggedUserJSON) {
+      const userData = JSON.parse(loggedUserJSON)
+      setUser(userData)
+      blogService.setToken(userData.token)
+    }
+  }, [])
+
   const handleLogin = async (event) => {
     event.preventDefault()
 
     try {
-      
+
       const userData = await loginService.login({ username, password })
-      window.localStorage.setItem('loggedBlogUser',JSON.stringify(userData))
+      window.localStorage.setItem('loggedBlogUser', JSON.stringify(userData))
       blogService.setToken(userData.token)
       // console.log(userData.token)
       setUser(userData)
       setUsername('')
       setPassword('')
+      fetchBlogs()
     } catch (error) {
-    
+      console.log('Error: ', error)
       setMessage('Wrong name or password')
       setTimeout(() => {
         setMessage(null)
       }, 3000)
     }
     // console.log('loing in with', username, password)
+  }
+
+  const handleLogout = (event) => {
+    event.preventDefault()
+    // console.log('log out')
+    window.localStorage.removeItem('loggedBlogUser')
+    blogService.setToken(null)
+    setUser(null)
+    setUsername('')
+    setPassword('')
+    setBlogs([])
   }
 
 
@@ -80,7 +101,7 @@ const App = () => {
   //     <div>
   //       <h2>blogs</h2>
   //       <label>{user.name} logged in</label>
-         
+
 
   //       {blogs.map(blog =>
   //         <Blog key={blog.id} blog={blog} />
@@ -90,14 +111,14 @@ const App = () => {
   // }
   return (
     <div>
-      {!user && (<LoginForm 
-                  message={message} 
-                  handleLogin={handleLogin} 
-                  username={username} 
-                  password={password} 
-                  setUsername={setUsername} 
-                  setPassword={setPassword}/>)}
-      {user && <BlogForm userData={user} blogs ={blogs}/>}
+      {!user && (<LoginForm
+        message={message}
+        handleLogin={handleLogin}
+        username={username}
+        password={password}
+        setUsername={setUsername}
+        setPassword={setPassword} />)}
+      {user && <BlogForm handleLogout={handleLogout} userData={user} blogs={blogs} />}
     </div>
 
   )
