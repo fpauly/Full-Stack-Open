@@ -53,6 +53,7 @@ const App = () => {
     setBlogs(blogList)
   }
   useEffect(() => {
+
     fetchBlogs()
   }, [])
 
@@ -62,6 +63,7 @@ const App = () => {
       const userData = JSON.parse(loggedUserJSON)
       setUser(userData)
       blogService.setToken(userData.token)
+      setAppTile(appTitles.tBlogs)
     }
   }, [])
 
