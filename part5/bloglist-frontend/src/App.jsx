@@ -3,7 +3,10 @@ import blogService from './services/BlogService'
 import Notification from './components/Notification'
 import loginService from './services/LoginService'
 import LoginForm from './components/LoginForm'
-import BlogForm from './components/BlogForm'
+import BlogList from './components/BlogList'
+import EditBlogForm from './components/EditBlogForm'
+import UserInfo from './components/UserInfo'
+import AppTitle from './components/AppTitle'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -12,6 +15,38 @@ const App = () => {
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
 
+  const [title, setTitle] = useState('')
+  const [author, setAuthor] = useState('')
+  const [url, setUrl] = useState('')
+
+  const messageClasses = {
+    normalClass: 'message',
+    errorClass: 'error'
+  }
+
+  const [messageClass, setMessageClass] = useState(messageClasses.normalClass)
+
+  const appTitles = {
+    tLoginPLZ: 'Log in to application',
+    tBlogs: 'blogs'
+  }
+
+  const [appTitle, setAppTile] = useState(appTitles.tLoginPLZ)
+
+  const showMessage = (strMessage) => {
+    setMessage(strMessage)
+    setMessageClass(messageClasses.normalClass)
+    setTimeout(() => {
+      setMessage(null)
+    }, 3000)
+  }
+  const showError = (strMessage) => {
+    setMessage(strMessage)
+    setMessageClass(messageClasses.errorClass)
+    setTimeout(() => {
+      setMessage(null)
+    }, 3000)
+  }
 
   const fetchBlogs = async () => {
     const blogList = await blogService.getAll()
@@ -43,12 +78,11 @@ const App = () => {
       setUsername('')
       setPassword('')
       fetchBlogs()
+      setAppTile(appTitles.tBlogs)
     } catch (error) {
       console.log('Error: ', error)
-      setMessage('Wrong name or password')
-      setTimeout(() => {
-        setMessage(null)
-      }, 3000)
+      showError('Wrong name or password')
+
     }
     // console.log('loing in with', username, password)
   }
@@ -62,6 +96,25 @@ const App = () => {
     setUsername('')
     setPassword('')
     setBlogs([])
+    setAppTile(appTitles.tLoginPLZ)
+  }
+
+  const handleCreate = async (event) => {
+    event.preventDefault()
+
+    try {
+      await blogService.createBlog({ title, author, url })
+      setTitle('')
+      setAuthor('')
+      setUrl('')
+      showMessage(`a new blog ${title} by ${author} added`)
+      fetchBlogs()
+    }
+    catch (error) {
+      console.log('Error: ', error)
+      showError('Something went wrong')
+    }
+
   }
 
 
@@ -111,14 +164,23 @@ const App = () => {
   // }
   return (
     <div>
+      <AppTitle appTitle={appTitle} />
+      <Notification messageClass={messageClass} message={message} />
       {!user && (<LoginForm
-        message={message}
         handleLogin={handleLogin}
         username={username}
         password={password}
         setUsername={setUsername}
         setPassword={setPassword} />)}
-      {user && <BlogForm handleLogout={handleLogout} userData={user} blogs={blogs} />}
+      {user && (
+        <div>
+
+          <UserInfo userData={user} handleLogout={handleLogout} />
+          <p />
+          <EditBlogForm handleCreate={handleCreate} title={title} setTitle={setTitle} author={author} setAuthor={setAuthor} url={url} setUrl={setUrl} />
+          <BlogList blogs={blogs} />
+        </div>
+      )}
     </div>
 
   )

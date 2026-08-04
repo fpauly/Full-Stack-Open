@@ -4,14 +4,12 @@ const baseUrl = '/api/login'
 
 const login = async credentials => {
     try {
-        
+
         const response = await axios.post(baseUrl, credentials)
         return response.data
     } catch (error) {
-        console.log('Raw error:', error)
-        console.log('error.message:', error.message)
-        console.log('error.code:', error.code)
-        console.log('error.response:', error.response)
+        console.log(' error:', error)
+
         throw error
     }
 }

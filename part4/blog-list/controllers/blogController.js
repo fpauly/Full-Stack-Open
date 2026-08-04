@@ -60,7 +60,6 @@ blogsRouter.post('/', userExtractor, async (req, res) => {
   // const user = await User.findById(body.user)
   const user = req.user
 
-
   const blog = new Blog({
     title: body.title,
     author: body.author,
