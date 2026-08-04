@@ -1,14 +1,15 @@
 import Notification from "./Notification"
-const LoginForm = ({ message, handleLogin, username, password, setUsername, setPassword }) => {
+const LoginForm = ({ handleLogin, username, password, setUsername, setPassword }) => {
   return (
     <div>
-      <h2>Log in to application</h2>
-      <Notification message={message} />
+
+
       <form onSubmit={handleLogin}>
         <div>
           <label htmlFor='username' >username</label>
           <input type='text'
             id='username'
+            required
             value={username}
             onChange={({ target }) => setUsername(target.value)} />
         </div>
@@ -19,6 +20,7 @@ const LoginForm = ({ message, handleLogin, username, password, setUsername, setP
             password
             <input type='password'
               value={password}
+              required
               onChange={({ target }) => setPassword(target.value)}
             />
           </label>

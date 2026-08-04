@@ -8,7 +8,7 @@ const baseUrl = '/api/blogs'
 
 let token = null
 
-const setToken = (newToken) =>{
+const setToken = (newToken) => {
   token = `Bearer ${newToken}`
 }
 
@@ -19,29 +19,29 @@ const getAll = async () => {
 
 }
 
-const createBlog = async (newObject)=>{
+const createBlog = async (newObject) => {
   const config = {
-    headers:{Authorization:token}
+    headers: { Authorization: token }
   }
 
-  const response = await axios.post(baseUrl,newObject,config)
+  const response = await axios.post(baseUrl, newObject, config)
   return response.data
 }
 
-const updateBlog = async (id , newObject) => {
+const updateBlog = async (id, newObject) => {
   const config = {
-    headers : {authorization:token} //大小写不敏感 Authorization authorization 都可以
+    headers: { authorization: token } //大小写不敏感 Authorization authorization 都可以
   }
 
-  const response = await axios.put(`${baseUrl}/${id}`,newObject,config)
+  const response = await axios.put(`${baseUrl}/${id}`, newObject, config)
   return response.data
 }
-const deleteBlog = async (id, blogData)=>{
+const deleteBlog = async (id) => {
   const config = {
-    headers : {authorization:token} //大小写不敏感 Authorization authorization 都可以
+    headers: { authorization: token } //大小写不敏感 Authorization authorization 都可以
   }
-  const response = await axios.delete(`${baseUrl}/${id}`,blogData,config)
+  const response = await axios.delete(`${baseUrl}/${id}`, config)
   return response.data
 }
 
-export default { getAll,createBlog,updateBlog,deleteBlog,setToken }
+export default { getAll, createBlog, updateBlog, deleteBlog, setToken }
