@@ -27,6 +27,7 @@ const App = () => {
     try {
       
       const userData = await loginService.login({ username, password })
+      window.localStorage.setItem('loggedBlogUser',JSON.stringify(userData))
       blogService.setToken(userData.token)
       // console.log(userData.token)
       setUser(userData)
@@ -34,7 +35,7 @@ const App = () => {
       setPassword('')
     } catch (error) {
     
-      setMessage('Wrong credentials')
+      setMessage('Wrong name or password')
       setTimeout(() => {
         setMessage(null)
       }, 3000)
