@@ -32,15 +32,15 @@ async function seed() {
 
 
     const blogs = await Blog.insertMany([
-      { title: 'First Blog', author: 'Fan', url: 'http://test.com/1', likes: 5, user: root.id },
-      { title: 'Second Blog', author: 'Fan', url: 'http://test.com/2', likes: 10, user: root.id },
+      { title: 'First Blog', author: 'Fan', url: 'http://test.com/1', likes: 5, user: fan.id },
+      { title: 'Second Blog', author: 'Fan', url: 'http://test.com/2', likes: 10, user: fan.id },
     ])
     console.log(`Created ${blogs.length} blogs`)
 
     fan.blogs = blogs.map(b => b._id)
     await fan.save()
 
-    console.log('Seeding complete: root / 123456')
+    console.log('Seeding complete: fan and root, 123456')
   } catch (error) {
     console.error('Seeding failed:', error)
   } finally {
