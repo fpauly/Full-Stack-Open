@@ -7,6 +7,7 @@ import BlogList from './components/BlogList'
 import EditBlogForm from './components/EditBlogForm'
 import UserInfo from './components/UserInfo'
 import AppTitle from './components/AppTitle'
+import Togglable from './components/Togglable'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -179,7 +180,8 @@ const App = () => {
 
           <UserInfo userData={user} handleLogout={handleLogout} />
           <p />
-          <EditBlogForm handleCreate={handleCreate} title={title} setTitle={setTitle} author={author} setAuthor={setAuthor} url={url} setUrl={setUrl} />
+          <Togglable buttonLabel='create new blog'><EditBlogForm handleCreate={handleCreate} title={title} setTitle={setTitle} author={author} setAuthor={setAuthor} url={url} setUrl={setUrl} /></Togglable>
+          
           <BlogList blogs={blogs} />
         </div>
       )}
