@@ -1,4 +1,6 @@
+import { useState } from "react"
 const EditBlogForm = ({ handleCreate, title, setTitle, author, setAuthor, url, setUrl }) => {
+    // const [title, setTitle] = useState('')
     return (
         <div>
             <h2>create new</h2>
