@@ -1,11 +1,21 @@
 import { useState } from "react"
-const EditBlogForm = ({ handleCreate, title, setTitle, author, setAuthor, url, setUrl }) => {
-    // const [title, setTitle] = useState('')
+const EditBlogForm = ({ handleCreate }) => {
+    const [title, setTitle] = useState('')
+    const [author, setAuthor] = useState('')
+    const [url, setUrl] = useState('')
+
+    const subFunc = () => {
+        const blogData = {
+            title: title,
+            author: author,
+            url: url
+        }
+    }
     return (
         <div>
             <h2>create new</h2>
             <p></p>
-            <form onSubmit={handleCreate}>
+            <form onSubmit={subFunc}>
                 <div>
                     <label>title:
                         <input type='text' required value={title} onChange={({ target }) => setTitle(target.value)}></input>
