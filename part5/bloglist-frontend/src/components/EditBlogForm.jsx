@@ -4,18 +4,23 @@ const EditBlogForm = ({ handleCreate }) => {
     const [author, setAuthor] = useState('')
     const [url, setUrl] = useState('')
 
-    const subFunc = () => {
+    const submitFunc = (event) => {
+        event.preventDefault()
         const blogData = {
             title: title,
             author: author,
             url: url
         }
+        handleCreate(blogData)
+        setTitle('')
+        setAuthor('')
+        setUrl('')
     }
     return (
         <div>
             <h2>create new</h2>
             <p></p>
-            <form onSubmit={subFunc}>
+            <form onSubmit={submitFunc}>
                 <div>
                     <label>title:
                         <input type='text' required value={title} onChange={({ target }) => setTitle(target.value)}></input>
