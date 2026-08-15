@@ -102,14 +102,12 @@ const App = () => {
     setAppTile(appTitles.tLoginPLZ)
   }
 
-  const handleCreate = async (event) => {
-    event.preventDefault()
+  const handleCreate = async (blogData) => {
+   
 
     try {
-      await blogService.createBlog({ title, author, url })
-      setTitle('')
-      setAuthor('')
-      setUrl('')
+      await blogService.createBlog(blogData)
+     
       showMessage(`a new blog ${title} by ${author} added`)
       fetchBlogs()
     }
@@ -119,6 +117,7 @@ const App = () => {
     }
 
   }
+
 
 
   // const loginForm = () => {
@@ -180,7 +179,9 @@ const App = () => {
 
           <UserInfo userData={user} handleLogout={handleLogout} />
           <p />
-          <Togglable buttonLabel='create new blog'><EditBlogForm handleCreate={handleCreate} title={title} setTitle={setTitle} author={author} setAuthor={setAuthor} url={url} setUrl={setUrl} /></Togglable>
+          <Togglable buttonLabel='create new blog'>
+            <EditBlogForm handleCreate={handleCreate} />
+          </Togglable>
           
           <BlogList blogs={blogs} />
         </div>
