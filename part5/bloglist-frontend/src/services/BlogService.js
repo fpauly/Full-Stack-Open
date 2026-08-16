@@ -28,12 +28,12 @@ const createBlog = async (newObject) => {
   return response.data
 }
 
-const updateBlog = async (id, newObject) => {
+const updateBlog = async (newObject) => {
   const config = {
     headers: { authorization: token } //大小写不敏感 Authorization authorization 都可以
   }
 
-  const response = await axios.put(`${baseUrl}/${id}`, newObject, config)
+  const response = await axios.put(`${baseUrl}/${newObject.id}`, newObject, config)
   return response.data
 }
 const deleteBlog = async (id) => {

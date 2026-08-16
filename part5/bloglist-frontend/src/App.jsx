@@ -118,6 +118,17 @@ const App = () => {
 
   }
 
+  const handleLike = async (blogData)=> {
+    try{
+      await blogService.updateBlog(blogData)
+      showMessage(`One more like!`)
+      fetchBlogs()
+    }
+    catch (error) {
+      console.log('Error: ', error)
+      showError('Something went wrong')
+    }
+  }
 
 
   // const loginForm = () => {
@@ -183,7 +194,7 @@ const App = () => {
             <EditBlogForm handleCreate={handleCreate} />
           </Togglable>
           
-          <BlogList blogs={blogs} />
+          <BlogList blogs={blogs} handleLike={handleLike} />
         </div>
       )}
     </div>
