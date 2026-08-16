@@ -14,7 +14,7 @@ const setToken = (newToken) => {
 
 const getAll = async () => {
   const result = await axios.get(baseUrl)
-
+  const blogs = result.data.sort((a,b)=>b.likes-a.likes)
   return result.data
 
 }
