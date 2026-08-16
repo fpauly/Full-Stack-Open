@@ -1,12 +1,12 @@
 import BlogItem from "./BlogItem"
-const BlogList = ({ blogs }) => {
+const BlogList = ({ blogs,handleLike }) => {
     return (
         <div>
 
 
             {blogs.map(item => (
                 <div key={item.id}>
-                    <BlogItem blog={item}></BlogItem>
+                    <BlogItem blog={item} handleLike={handleLike}></BlogItem>
 
                 </div>
             ))}

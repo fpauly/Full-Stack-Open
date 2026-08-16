@@ -1,6 +1,7 @@
 const logger = require('./logger')
 const User = require('../models/user')
 const jwt = require('jsonwebtoken')
+const user = require('../models/user')
 
 const requestLogger = (request, response, next) => {
   logger.info('Method:', request.method)
@@ -53,6 +54,7 @@ const userExtractor = async (request, response, next) => {
 
   }
   const userData = await User.findById(decodedToken.id)
+  // console.log(userData.name)
   request.user = userData
   next()
 }
