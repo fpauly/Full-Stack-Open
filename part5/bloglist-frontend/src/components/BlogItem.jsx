@@ -1,5 +1,6 @@
 import { useState } from "react"
-const BlogItem = ({ blog,handleLike }) => 
+import BlogService from "../services/BlogService"
+const BlogItem = ({ blog,userData,handleLike,handleDelete }) => 
 {
   const [visible, setVisible] = useState(false)
    
@@ -23,11 +24,18 @@ const BlogItem = ({ blog,handleLike }) =>
 
 
   const addOneLike = ()=>{
-    blog.likes = blog.likes+1
+    const newBlog = {...blog,likes:blog.likes+1}
+    
     // console.log(blog.likes)
-    handleLike(blog)
+    handleLike(newBlog)
 
   }
+  const deleteBlog = ()=>{
+    if(window.confirm(`Remove blog ${blog.title} by ${blog.author}`))
+   { handleDelete(blog.id)}
+    
+  }
+  // const showRemove = blog.user.id === userData.id?{}:{display:'none'}
   return (
     <div style={blogStyle}>
       <div >
@@ -49,8 +57,14 @@ const BlogItem = ({ blog,handleLike }) =>
         <div>
           {blog.user.name}
         </div>
-
-
+        
+        {
+        
+        blog.user.id === userData.id&&
+        (  <div >
+            <button onClick={deleteBlog}>remove</button>
+          </div>)
+        }
       </div>
     </div>
   )

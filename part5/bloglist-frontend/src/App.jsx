@@ -16,9 +16,9 @@ const App = () => {
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
 
-  const [title, setTitle] = useState('')
-  const [author, setAuthor] = useState('')
-  const [url, setUrl] = useState('')
+  // const [title, setTitle] = useState('')
+  // const [author, setAuthor] = useState('')
+  // const [url, setUrl] = useState('')
 
   const timeoutRef = useRef(null)
 
@@ -29,12 +29,12 @@ const App = () => {
 
   const [messageClass, setMessageClass] = useState(messageClasses.normalClass)
 
-  const appTitles = {
+  const appTitleEnum = {
     tLoginPLZ: 'Log in to application',
     tBlogs: 'blogs'
   }
 
-  const [appTitle, setAppTile] = useState(appTitles.tLoginPLZ)
+  const appTitle = user?appTitleEnum.tBlogs : appTitleEnum.tLoginPLZ
 
   const showMessage = (strMessage) => {
     setMessage(strMessage)
@@ -74,7 +74,6 @@ const App = () => {
       const userData = JSON.parse(loggedUserJSON)
       setUser(userData)
       blogService.setToken(userData.token)
-      setAppTile(appTitles.tBlogs)
     }
   }, [])
 
@@ -86,12 +85,12 @@ const App = () => {
       const userData = await loginService.login({ username, password })
       window.localStorage.setItem('loggedBlogUser', JSON.stringify(userData))
       blogService.setToken(userData.token)
+      console.log(userData)
       // console.log(userData.token)
       setUser(userData)
       setUsername('')
       setPassword('')
       fetchBlogs()
-      setAppTile(appTitles.tBlogs)
     } catch (error) {
       console.log('Error: ', error)
       showError('Wrong name or password')
@@ -109,7 +108,6 @@ const App = () => {
     setUsername('')
     setPassword('')
     setBlogs([])
-    setAppTile(appTitles.tLoginPLZ)
   }
 
   const handleCreate = async (blogData) => {
@@ -118,7 +116,7 @@ const App = () => {
     try {
       await blogService.createBlog(blogData)
      
-      showMessage(`a new blog ${title} by ${author} added`)
+      showMessage(`a new blog ${blogData.title} by ${blogData.author} added`)
       fetchBlogs()
     }
     catch (error) {
@@ -137,6 +135,18 @@ const App = () => {
     catch (error) {
       console.log('Error: ', error)
       showError('Something went wrong')
+    }
+  }
+
+  const handleDelete = async(blogId) =>{
+    try{
+      await blogService.deleteBlog(blogId)
+      showMessage('blog deleted')
+      fetchBlogs()
+    }
+    catch (error){
+      console.log('Error: ',error)
+      showError('Somthing went wrong')
     }
   }
 
@@ -204,7 +214,7 @@ const App = () => {
             <EditBlogForm handleCreate={handleCreate} />
           </Togglable>
           
-          <BlogList blogs={blogs} handleLike={handleLike} />
+          <BlogList blogs={blogs} userData={user} handleLike={handleLike} handleDelete={handleDelete} />
         </div>
       )}
     </div>
