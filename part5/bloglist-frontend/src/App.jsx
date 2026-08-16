@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect,useRef } from 'react'
 import blogService from './services/BlogService'
 import Notification from './components/Notification'
 import loginService from './services/LoginService'
@@ -20,6 +20,8 @@ const App = () => {
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
 
+  const timeoutRef = useRef(null)
+
   const messageClasses = {
     normalClass: 'message',
     errorClass: 'error'
@@ -37,14 +39,22 @@ const App = () => {
   const showMessage = (strMessage) => {
     setMessage(strMessage)
     setMessageClass(messageClasses.normalClass)
-    setTimeout(() => {
+    if(timeoutRef.current)
+    {
+      clearTimeout(timeoutRef.current)
+    }
+    timeoutRef.current = setTimeout(() => {
       setMessage(null)
     }, 3000)
   }
   const showError = (strMessage) => {
     setMessage(strMessage)
     setMessageClass(messageClasses.errorClass)
-    setTimeout(() => {
+    if(timeoutRef.current)
+    {
+      clearTimeout(timeoutRef.current)
+    }
+    timeoutRef.current = setTimeout(() => {
       setMessage(null)
     }, 3000)
   }
