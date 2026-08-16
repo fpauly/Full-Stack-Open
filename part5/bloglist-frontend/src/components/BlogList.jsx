@@ -1,3 +1,4 @@
+import BlogItem from "./BlogItem"
 const BlogList = ({ blogs }) => {
     return (
         <div>
@@ -5,7 +6,7 @@ const BlogList = ({ blogs }) => {
 
             {blogs.map(item => (
                 <div key={item.id}>
-                    <div>{item.title} {item.author}</div>
+                    <BlogItem blog={item}></BlogItem>
 
                 </div>
             ))}
