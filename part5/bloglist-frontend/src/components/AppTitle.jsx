@@ -1,7 +1,7 @@
 const AppTitle = ({ appTitle }) => {
-    return (
-        <h1>{appTitle}</h1>
-    )
+  return (
+    <h1>{appTitle}</h1>
+  )
 }
 
 export default AppTitle
