@@ -1,4 +1,4 @@
-import { useState, useEffect,useRef } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import blogService from './services/BlogService'
 import Notification from './components/Notification'
 import loginService from './services/LoginService'
@@ -34,13 +34,12 @@ const App = () => {
     tBlogs: 'blogs'
   }
 
-  const appTitle = user?appTitleEnum.tBlogs : appTitleEnum.tLoginPLZ
+  const appTitle = user ? appTitleEnum.tBlogs : appTitleEnum.tLoginPLZ
 
   const showMessage = (strMessage) => {
     setMessage(strMessage)
     setMessageClass(messageClasses.normalClass)
-    if(timeoutRef.current)
-    {
+    if (timeoutRef.current) {
       clearTimeout(timeoutRef.current)
     }
     timeoutRef.current = setTimeout(() => {
@@ -50,8 +49,7 @@ const App = () => {
   const showError = (strMessage) => {
     setMessage(strMessage)
     setMessageClass(messageClasses.errorClass)
-    if(timeoutRef.current)
-    {
+    if (timeoutRef.current) {
       clearTimeout(timeoutRef.current)
     }
     timeoutRef.current = setTimeout(() => {
@@ -111,11 +109,9 @@ const App = () => {
   }
 
   const handleCreate = async (blogData) => {
-   
 
     try {
       await blogService.createBlog(blogData)
-     
       showMessage(`a new blog ${blogData.title} by ${blogData.author} added`)
       fetchBlogs()
     }
@@ -126,10 +122,10 @@ const App = () => {
 
   }
 
-  const handleLike = async (blogData)=> {
-    try{
+  const handleLike = async (blogData) => {
+    try {
       await blogService.updateBlog(blogData)
-      showMessage(`One more like!`)
+      showMessage('One more like!')
       fetchBlogs()
     }
     catch (error) {
@@ -138,14 +134,14 @@ const App = () => {
     }
   }
 
-  const handleDelete = async(blogId) =>{
-    try{
+  const handleDelete = async (blogId) => {
+    try {
       await blogService.deleteBlog(blogId)
       showMessage('blog deleted')
       fetchBlogs()
     }
-    catch (error){
-      console.log('Error: ',error)
+    catch (error) {
+      console.log('Error: ', error)
       showError('Somthing went wrong')
     }
   }
@@ -213,7 +209,6 @@ const App = () => {
           <Togglable buttonLabel='create new blog'>
             <EditBlogForm handleCreate={handleCreate} />
           </Togglable>
-          
           <BlogList blogs={blogs} userData={user} handleLike={handleLike} handleDelete={handleDelete} />
         </div>
       )}
