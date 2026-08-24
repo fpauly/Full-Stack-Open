@@ -19,6 +19,8 @@ const userData = {
   username: 'fan y'
 }
 
+
+
 test('test render title and author', () => {
 
 
@@ -35,7 +37,7 @@ test('test render title and author', () => {
   expect(likesContent).not.toBeVisible()
 })
 
-test('test  clicking once', async () => {
+test('test view clicked, then url and likes showed up', async () => {
 
   render(<BlogItem blog={blogData} userData={userData} />)
 
@@ -48,4 +50,17 @@ test('test  clicking once', async () => {
 
   const likesContent = screen.getByText('likes 5')
   expect(likesContent).toBeDefined()
+})
+
+test('test like button clicked twice', async () => {
+
+  const mockLike = vi.fn()
+  render(<BlogItem blog={blogData} userData={userData} handleLike={mockLike} />)
+  const user = userEvent.setup()
+  const button = screen.getByText('like')
+  for (let i = 0; i < 2; i++) {
+    await user.click(button)
+  }
+
+  expect(mockLike.mock.calls).toHaveLength(2)
 })
