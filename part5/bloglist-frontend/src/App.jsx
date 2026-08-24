@@ -31,7 +31,7 @@ const App = () => {
 
   const appTitleEnum = {
     tLoginPLZ: 'Log in to application',
-    tBlogs: 'blogs'
+    tBlogs: ''
   }
 
   const appTitle = user ? appTitleEnum.tBlogs : appTitleEnum.tLoginPLZ
@@ -193,6 +193,7 @@ const App = () => {
   // }
   return (
     <div>
+      <h1>Blogs</h1>
       <AppTitle appTitle={appTitle} />
       <Notification messageClass={messageClass} message={message} />
       {!user && (<LoginForm
