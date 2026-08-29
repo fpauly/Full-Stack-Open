@@ -26,7 +26,7 @@ describe('when there is initially some blogs saved', () => {
     const savedUsers = await User.insertMany(users)
     const userId = savedUsers[0].id
     const blogs = helper.initialBlogs.map(b => ({ ...b, user: userId }))
-    const savedBlogs = await Blog.insertMany(blogs)
+    await Blog.insertMany(blogs)
 
     // savedUsers.forEach(u=>u.blogs.push(userId))
     // await Promise.add(savedUsers.map(u => u.save()))
