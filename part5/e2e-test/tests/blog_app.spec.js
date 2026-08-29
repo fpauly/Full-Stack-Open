@@ -1,6 +1,13 @@
 
 import { test, expect, describe, beforeEach } from '@playwright/test'
 
+const createBlog = async (page, title, username, url) => {
+  await page.getByRole('button', { name: 'create new blog' }).click()
+  await page.getByLabel('title').fill('a new blog create by playwright')
+  await page.getByLabel('author').fill('mluukkai')
+  await page.getByLabel('url').fill('thisisatesturl.com')
+  await page.getByRole('button', { name: 'create' }).click()
+}
 
 describe('blog app test', () => {
 
@@ -61,14 +68,30 @@ describe('blog app test', () => {
     })
 
     test('a new blog can be created', async ({ page }) => {
-      await page.getByRole('button', { name: 'create new blog' }).click()
-      await page.getByLabel('title').fill('a new blog create by playwright')
-      await page.getByLabel('author').fill('mluukkai')
-      await page.getByLabel('url').fill('thisisatesturl.com')
-      await page.getByRole('button', { name: 'create' }).click()
+      // await page.getByRole('button', { name: 'create new blog' }).click()
+      // await page.getByLabel('title').fill('a new blog create by playwright')
+      // await page.getByLabel('author').fill('mluukkai')
+      // await page.getByLabel('url').fill('thisisatesturl.com')
+      // await page.getByRole('button', { name: 'create' }).click()
+      createBlog(page, 'a new blog create by playwright', 'mluukkai', 'thisisatesturl.com')
 
       const blogList = page.getByTestId('blog')
       await expect(blogList).toContainText('a new blog create by playwright')
+    })
+
+    test('like can be click and increase', async ({ page }) => {
+      // await page.getByRole('button', { name: 'create new blog' }).click()
+      // await page.getByLabel('title').fill('a new blog create by playwright')
+      // await page.getByLabel('author').fill('mluukkai')
+      // await page.getByLabel('url').fill('thisisatesturl.com')
+      // await page.getByRole('button', { name: 'create' }).click()
+
+      createBlog(page, 'a new blog create by playwright', 'mluukkai', 'thisisatesturl.com')
+
+      await page.getByRole('button', { name: 'view' }).click()
+      await page.getByRole('button', { name: 'like' }).click()
+
+      await expect(page.getByText('likes 1')).toBeVisible()
     })
 
   })
