@@ -1,14 +1,13 @@
 import { useState } from 'react'
 import BlogService from '../services/BlogService'
-const BlogItem = ({ blog,userData,handleLike,handleDelete }) =>
-{
+const BlogItem = ({ blog, userData, handleLike, handleDelete }) => {
   const [visible, setVisible] = useState(false)
 
   // const hideWhenVisible = {display: visible?'none':''}
   // const showWhenVisible = {display: visible?'':'none'}
 
-  const showDetail = { display: visible?'':'none' }
-  const buttonTxt = visible?'hide':'view'
+  const showDetail = { display: visible ? '' : 'none' }
+  const buttonTxt = visible ? 'hide' : 'view'
   const toggleVisibility = () => {
     setVisible(!visible)
   }
@@ -24,20 +23,19 @@ const BlogItem = ({ blog,userData,handleLike,handleDelete }) =>
 
 
   const addOneLike = () => {
-    const newBlog = { ...blog,likes:blog.likes+1 }
+    const newBlog = { ...blog, likes: blog.likes + 1 }
 
     // console.log(blog.likes)
     handleLike(newBlog)
 
   }
   const deleteBlog = () => {
-    if(window.confirm(`Remove blog ${blog.title} by ${blog.author}`))
-    { handleDelete(blog.id)}
+    if (window.confirm(`Remove blog ${blog.title} by ${blog.author}`)) { handleDelete(blog.id) }
 
   }
   // const showRemove = blog.user.id === userData.id?{}:{display:'none'}
   return (
-    <div style={blogStyle}>
+    <div style={blogStyle} data-testid='blog'>
       <div >
         {blog.title} {blog.author}
         <button onClick={toggleVisibility}>{buttonTxt}</button>
@@ -60,10 +58,10 @@ const BlogItem = ({ blog,userData,handleLike,handleDelete }) =>
 
         {
 
-          blog.user.id === userData.id&&
-        (  <div >
-          <button onClick={deleteBlog}>remove</button>
-        </div>)
+          blog.user.id === userData.id &&
+          (<div >
+            <button onClick={deleteBlog}>remove</button>
+          </div>)
         }
       </div>
     </div>
