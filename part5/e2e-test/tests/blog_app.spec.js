@@ -94,6 +94,15 @@ describe('blog app test', () => {
       await expect(page.getByText('likes 1')).toBeVisible()
     })
 
+    test('blog can be deleted which added by current user', async ({ page }) => {
+
+      await createBlog(page, 'a new blog create by playwright', 'mluukkai', 'thisisatesturl.com')
+      await page.getByRole('button', { name: 'view' }).click()
+      await page.getByRole('button', { name: 'remove' }).click()
+
+      await expect(page.getByText('blog deleted')).toBeVisible()
+    })
+
   })
 
 })
