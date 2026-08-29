@@ -53,5 +53,24 @@ describe('blog app test', () => {
     })
   })
 
+  describe('when logged in', () => {
+    beforeEach(async ({ page }) => {
+      await page.getByLabel('username').fill('fan')
+      await page.getByLabel('password').fill('123456')
+      await page.getByRole('button', { name: 'login' }).click()
+    })
+
+    test('a new blog can be created', async ({ page }) => {
+      await page.getByRole('button', { name: 'create new blog' }).click()
+      await page.getByLabel('title').fill('a new blog create by playwright')
+      await page.getByLabel('author').fill('mluukkai')
+      await page.getByLabel('url').fill('thisisatesturl.com')
+      await page.getByRole('button', { name: 'create' }).click()
+
+      const blogList = page.getByTestId('blog')
+      await expect(blogList).toContainText('a new blog create by playwright')
+    })
+
+  })
 
 })
