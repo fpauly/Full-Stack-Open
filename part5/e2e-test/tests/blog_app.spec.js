@@ -123,6 +123,29 @@ describe('blog app test', () => {
       await expect(page.getByText('blog deleted')).toBeVisible()
     })
 
+    test('users can not see the remove button when they are seeing the blogs not belong to them', async ({ page, request }) => {
+      await createBlog(page, 'a new blog create by playwright', 'mluukkai', 'thisisatesturl.com')
+      await page.getByRole('button', { name: 'view' }).click()
+      await expect(page.getByText('remove')).toBeVisible()
+      //log out 
+      await page.getByRole('button', { name: 'logout' }).click()
+
+      const addUserResponse = await request.post('http://localhost:3018/api/users', {
+        data: {
+          name: 'who am i',
+          username: 'dr_who',
+          password: '123456'
+        }
+      })
+      expect(addUserResponse.ok()).toBeTruthy()
+
+      await page.getByLabel('username').fill('dr_who')
+      await page.getByLabel('password').fill('123456')
+      await page.getByRole('button', { name: 'login' }).click()
+      await page.getByRole('button', { name: 'view' }).click()
+      await expect(page.getByText('remove')).not.toBeVisible()
+    })
+
   })
 
 })
