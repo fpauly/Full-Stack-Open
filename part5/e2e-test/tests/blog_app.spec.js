@@ -3,10 +3,17 @@ import { test, expect, describe, beforeEach } from '@playwright/test'
 
 const createBlog = async (page, title, username, url) => {
   await page.getByRole('button', { name: 'create new blog' }).click()
-  await page.getByLabel('title').fill('a new blog create by playwright')
-  await page.getByLabel('author').fill('mluukkai')
-  await page.getByLabel('url').fill('thisisatesturl.com')
+  await page.getByLabel('title').fill(title)
+  await page.getByLabel('author').fill(username)
+  await page.getByLabel('url').fill(url)
   await page.getByRole('button', { name: 'create' }).click()
+  await page.getByRole('button', { name: 'cancel' }).click()
+}
+
+const likeBlog = async (page, title, times) => {
+  const likeDiv = page.locator('[data-testid="test-like"]', { hasText: title })
+  await likeDiv.getByRole('button', { name: 'view' }).click()
+  await 
 }
 
 describe('blog app test', () => {
@@ -75,7 +82,7 @@ describe('blog app test', () => {
       // await page.getByRole('button', { name: 'create' }).click()
       createBlog(page, 'a new blog create by playwright', 'mluukkai', 'thisisatesturl.com')
 
-      const blogList = page.getByTestId('blog')
+      const blogList = page.getByTestId('test-blog')
       await expect(blogList).toContainText('a new blog create by playwright')
     })
 
@@ -144,6 +151,19 @@ describe('blog app test', () => {
       await page.getByRole('button', { name: 'login' }).click()
       await page.getByRole('button', { name: 'view' }).click()
       await expect(page.getByText('remove')).not.toBeVisible()
+    })
+
+    test('blog list ordered by likes', async ({ page }) => {
+      await createBlog(page, 'blog one with 1 likes', 'Fan', 'fan.com')
+      // await expect(page.getByText('blog one with 1 likes')).toBeVisible() 
+      //strict mode violation: getByText('blog one with 1 likes') resolved to 2 elements, because message and title both include same text
+
+      await expect(page.getByTestId('test-blog').filter({ hasText: 'blog one with 1 likes' })).toBeVisible()
+      await createBlog(page, 'second blog, 5 likes', 'Danylo', 'danylo.fi')
+      await expect(page.getByTestId('test-blog').filter({ hasText: 'second blog, 5 likes' })).toBeVisible()
+
+      await createBlog(page, 'im the third one', 'hello world', 'hi.com')
+      await expect(page.getByTestId('test-blog').filter({ hasText: 'im the third one' })).toBeVisible()
     })
 
   })
