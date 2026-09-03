@@ -98,6 +98,26 @@ describe('blog app test', () => {
 
       await createBlog(page, 'a new blog create by playwright', 'mluukkai', 'thisisatesturl.com')
       await page.getByRole('button', { name: 'view' }).click()
+      await expect(page.getByText('remove')).toBeVisible()
+
+      //使用 page.on 注册弹窗而且要提前注册。page.on 注册后不会自动取消，可以相应多次弹窗，可以用计数器来控制。
+      //page.once 也可以，但是最好用在确认可以弹出的多次弹窗，因为需要每次弹出前注册一个独立的响应事件。可能会第一个并没有弹出导致响应了第二个事件，这样有可能通过测试。
+
+      //'dialog' 是固定的事件名称
+      //       page.on('dialog', ...)      // 原生弹窗（alert/confirm/prompt）
+      // page.on('console', ...)     // 页面里 console.log 的输出
+      // page.on('request', ...)     // 发出的网络请求
+      // page.on('response', ...)    // 收到的网络响应
+      // page.on('pageerror', ...)   // 页面 JS 报错
+      // page.on('popup', ...)       // 新开的弹出窗口/标签页
+      // page.on('close', ...)       // 页面关闭
+
+      page.on('dialog', async dialog => {// dialog === (dialog) != ({dialog}) 解构的花括号是不可以省略的
+        console.log('dialog pop up:', dialog.message())
+        await dialog.accept()
+      })
+
+
       await page.getByRole('button', { name: 'remove' }).click()
 
       await expect(page.getByText('blog deleted')).toBeVisible()
