@@ -11,9 +11,17 @@ const createBlog = async (page, title, username, url) => {
 }
 
 const likeBlog = async (page, title, times) => {
-  const likeDiv = page.locator('[data-testid="test-like"]', { hasText: title })
-  await likeDiv.getByRole('button', { name: 'view' }).click()
-  await 
+  const blogDiv = page.locator('[data-testid="test-blog"]', { hasText: title })
+  await blogDiv.getByRole('button', { name: 'view' }).click()
+
+  for (let i = 0; i < times; i++) {
+    //正则表达式的写法，用来匹配，d+是贪婪匹配，d是一个数字，d+是匹配为尽可能多的number
+    const likesText = await blogDiv.getByText(/likes \d+/).textContent()
+    //匹配数字，第一个
+    const currentLikes = Number(likesText.match(/\d+/)[0])
+    await blogDiv.getByRole('button', { name: 'like' }).click()
+    await expect(blogDiv.getByText(`likes ${currentLikes + 1}`)).toBeVisible()
+  }
 }
 
 describe('blog app test', () => {
@@ -80,7 +88,7 @@ describe('blog app test', () => {
       // await page.getByLabel('author').fill('mluukkai')
       // await page.getByLabel('url').fill('thisisatesturl.com')
       // await page.getByRole('button', { name: 'create' }).click()
-      createBlog(page, 'a new blog create by playwright', 'mluukkai', 'thisisatesturl.com')
+      await createBlog(page, 'a new blog create by playwright', 'mluukkai', 'thisisatesturl.com')
 
       const blogList = page.getByTestId('test-blog')
       await expect(blogList).toContainText('a new blog create by playwright')
@@ -93,7 +101,7 @@ describe('blog app test', () => {
       // await page.getByLabel('url').fill('thisisatesturl.com')
       // await page.getByRole('button', { name: 'create' }).click()
 
-      createBlog(page, 'a new blog create by playwright', 'mluukkai', 'thisisatesturl.com')
+      await createBlog(page, 'a new blog create by playwright', 'mluukkai', 'thisisatesturl.com')
 
       await page.getByRole('button', { name: 'view' }).click()
       await page.getByRole('button', { name: 'like' }).click()
@@ -154,17 +162,46 @@ describe('blog app test', () => {
     })
 
     test('blog list ordered by likes', async ({ page }) => {
-      await createBlog(page, 'blog one with 1 likes', 'Fan', 'fan.com')
+      const title1 = 'blog one with 2 likes'
+      await createBlog(page, title1, 'Fan', 'fan.com')
       // await expect(page.getByText('blog one with 1 likes')).toBeVisible() 
       //strict mode violation: getByText('blog one with 1 likes') resolved to 2 elements, because message and title both include same text
 
-      await expect(page.getByTestId('test-blog').filter({ hasText: 'blog one with 1 likes' })).toBeVisible()
-      await createBlog(page, 'second blog, 5 likes', 'Danylo', 'danylo.fi')
-      await expect(page.getByTestId('test-blog').filter({ hasText: 'second blog, 5 likes' })).toBeVisible()
+      await expect(page.getByTestId('test-blog').filter({ hasText: title1 })).toBeVisible()
+      await likeBlog(page, title1, 2)
 
-      await createBlog(page, 'im the third one', 'hello world', 'hi.com')
-      await expect(page.getByTestId('test-blog').filter({ hasText: 'im the third one' })).toBeVisible()
+      const title2 = 'second blog, 5 likes'
+      await createBlog(page, title2, 'Danylo', 'danylo.fi')
+      await expect(page.getByTestId('test-blog').filter({ hasText: title2 })).toBeVisible()
+      await likeBlog(page, title2, 5)
+
+      const title3 = 'im the third one, 1 likes'
+      await createBlog(page, title3, 'hello world', 'hi.com')
+      await expect(page.getByTestId('test-blog').filter({ hasText: title3 })).toBeVisible()
+      await likeBlog(page, title3, 1)
+
+
+      const blogs = await page.getByTestId('test-blog').allTextContents()
+      expect(blogs[0]).toContain(title2)
+      expect(blogs[1]).toContain(title1)
+      expect(blogs[2]).toContain(title3)
+
+      //use another method to test, get number first
+      const likeCounts = blogs.map(blogText => {
+        const nCount = Number(blogText.match(/likes (\d+)/)[1])//[0] 是整个字符串 [1]是精确匹配的数字，如果有多个括号,以此类推[2]...
+        return nCount
+      })
+
+      for (let i = 0; i < likeCounts.length - 1; i++) {
+        expect(likeCounts[i]).toBeGreaterThanOrEqual(likeCounts[i + 1])
+      }
+      //another one
+
+      const expectlikes = [...likeCounts].sort((a, b) => b - a)
+      expect(likeCounts).toEqual(expectlikes)
     })
+
+
 
   })
 
