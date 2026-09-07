@@ -35,7 +35,7 @@ const BlogItem = ({ blog, userData, handleLike, handleDelete }) => {
   }
   // const showRemove = blog.user.id === userData.id?{}:{display:'none'}
   return (
-    <div style={blogStyle} data-testid='blog'>
+    <div style={blogStyle} data-testid='test-blog'>
       <div >
         {blog.title} {blog.author}
         <button onClick={toggleVisibility}>{buttonTxt}</button>
@@ -48,7 +48,7 @@ const BlogItem = ({ blog, userData, handleLike, handleDelete }) => {
         <div>
           {blog.url}
         </div>
-        <div>
+        <div data-testid='test-like'>
           likes {blog.likes}
           <button onClick={addOneLike}>like</button>
         </div>
