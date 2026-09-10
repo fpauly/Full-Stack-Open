@@ -58,7 +58,7 @@ const BlogItem = ({ blog, userData, handleLike, handleDelete }) => {
 
         {
 
-          blog.user.id === userData.id &&
+          userData && blog.user.id === userData.id &&
           (<div >
             <button onClick={deleteBlog}>remove</button>
           </div>)
