@@ -9,6 +9,8 @@ import UserInfo from './components/UserInfo'
 import AppTitle from './components/AppTitle'
 import Togglable from './components/Togglable'
 
+import { Routes, Route, Link, useNavigate } from 'react-router-dom'
+
 const App = () => {
   const [blogs, setBlogs] = useState([])
   const [message, setMessage] = useState(null)
@@ -29,12 +31,12 @@ const App = () => {
 
   const [messageClass, setMessageClass] = useState(messageClasses.normalClass)
 
-  const appTitleEnum = {
-    tLoginPLZ: 'Log in to application',
-    tBlogs: ''
-  }
+  // const appTitleEnum = {
+  //   tLoginPLZ: 'Log in to application',
+  //   tBlogs: ''
+  // }
 
-  const appTitle = user ? appTitleEnum.tBlogs : appTitleEnum.tLoginPLZ
+  // const appTitle = user ? appTitleEnum.tBlogs : appTitleEnum.tLoginPLZ
 
   const showMessage = (strMessage) => {
     setMessage(strMessage)
@@ -110,6 +112,8 @@ const App = () => {
 
   }, [])
 
+
+  const navigate = useNavigate()
   const handleLogin = async (event) => {
     event.preventDefault()
 
@@ -124,6 +128,7 @@ const App = () => {
       setUsername('')
       setPassword('')
       fetchBlogs()
+      navigate('/')
     } catch (error) {
       console.log('Error: ', error)
       showError('Wrong name or password')
@@ -141,6 +146,8 @@ const App = () => {
     setUsername('')
     setPassword('')
     setBlogs([])
+    fetchBlogs()
+    navigate('/')
   }
 
   const handleCreate = async (blogData) => {
@@ -226,28 +233,59 @@ const App = () => {
   //     </div>
   //   )
   // }
+
   return (
     <div>
-      <h1>Blogs</h1>
-      <AppTitle appTitle={appTitle} />
-      <Notification messageClass={messageClass} message={message} />
-      {!user && (<LoginForm
-        handleLogin={handleLogin}
-        username={username}
-        password={password}
-        setUsername={setUsername}
-        setPassword={setPassword} />)}
-      {user && (
-        <div>
+      <div>
+        <Link to="/">blogs</Link>
+        {!user && (<Link to="/login">login</Link>)}
+        {user && (<button onClick={handleLogout}>logout</button>)}
 
-          <UserInfo userData={user} handleLogout={handleLogout} />
-          <p />
-          <Togglable buttonLabel='create new blog'>
-            <EditBlogForm handleCreate={handleCreate} />
-          </Togglable>
-          <BlogList blogs={blogs} userData={user} handleLike={handleLike} handleDelete={handleDelete} />
-        </div>
-      )}
+
+      </div>
+
+      <Routes>
+        <Route path='/' element={
+          <div>
+            <h1>Blogs</h1>
+            {/* <AppTitle appTitle={appTitle} /> */}
+            <Notification messageClass={messageClass} message={message} />
+
+            {user && (
+              <div>
+
+                {/* <UserInfo userData={user} handleLogout={handleLogout} /> */}
+                {/* <p /> */}
+                <Togglable buttonLabel='create new blog'>
+                  <EditBlogForm handleCreate={handleCreate} />
+                </Togglable>
+
+              </div>
+            )}
+            <BlogList blogs={blogs} userData={user} handleLike={handleLike} handleDelete={handleDelete} />
+          </div>
+        } />
+        <Route path='/login' element={
+          <div>
+            {!user && (
+
+              <div>
+                <h1>Log in to application</h1>
+                <Notification messageClass={messageClass} message={message} />
+                <LoginForm
+                  handleLogin={handleLogin}
+                  username={username}
+                  password={password}
+                  setUsername={setUsername}
+                  setPassword={setPassword} />
+              </div>
+            )}
+          </div>
+
+        } />
+
+
+      </Routes>
     </div>
 
   )
