@@ -11,9 +11,14 @@ const createBlog = async (page, title, username, url) => {
 }
 
 const likeBlog = async (page, title, times) => {
-  const likeDiv = page.locator('[data-testid="test-like"]', { hasText: title })
-  await likeDiv.getByRole('button', { name: 'view' }).click()
-  await 
+  const blogDiv = page.locator('[data-testid="test-blog"]', { hasText: title })
+  await blogDiv.getByRole('button', { name: 'view' }).click()
+
+  for (let i = 0; i < times; i++) {
+    await blogDiv.getByRole('button', { name: 'like' }).click()
+    await expect(getByText)
+  }
+
 }
 
 describe('blog app test', () => {
@@ -159,6 +164,7 @@ describe('blog app test', () => {
       //strict mode violation: getByText('blog one with 1 likes') resolved to 2 elements, because message and title both include same text
 
       await expect(page.getByTestId('test-blog').filter({ hasText: 'blog one with 1 likes' })).toBeVisible()
+
       await createBlog(page, 'second blog, 5 likes', 'Danylo', 'danylo.fi')
       await expect(page.getByTestId('test-blog').filter({ hasText: 'second blog, 5 likes' })).toBeVisible()
 
